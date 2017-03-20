@@ -5,10 +5,13 @@
  */
 package sentimentanalysis;
 
+import java.util.ArrayList;
+
+
 /**
  *
  * @author gerald
  */
 public class BagOfWords {
-    
+    private ArrayList<Word> words;
 }
