@@ -37,4 +37,9 @@ public class Review {
     public int getClasse() {
         return classe;
     }
+    
+    /* Miscellaneous */
+    public void parseReview() {
+        
+    }
 }
