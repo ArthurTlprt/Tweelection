@@ -6,6 +6,7 @@
 package sentimentanalysis;
 
 import static java.lang.Math.abs;
+import java.text.Normalizer;
 import java.util.ArrayList;
 
 
@@ -66,8 +67,21 @@ public class BagOfWords {
     
     /* Miscellaneous */
     
+    /* Computes a word to save it */
+    public String computeWord(String word) {
+        word = Normalizer.normalize(word, Normalizer.Form.NFD);
+        word = word.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        word = word.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+        word = word.replaceAll(" ", "");
+        return word;
+    }
+    
     /* Adds a word to the database */
     public void addWord(String word, int classe) {
+        word = computeWord(word);
+        if(word.length() == 0) 
+            return;
+        
         int wordIndex = getIndexByWord(word);
         if(wordIndex == -1) {
             /* Word unknown for now */

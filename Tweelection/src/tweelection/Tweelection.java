@@ -18,12 +18,7 @@ public class Tweelection {
      */
     public static void main(String[] args) {
         BagOfWords bog = new BagOfWords();
-        bog.addWord("Bonjour", 1);
-        bog.addWord("nul", 0);
-        bog.addWord("parfait", 5);
-        for(int i = 0; i < 585; i++)  
-            bog.addWord("capitalisme", 0);
-        bog.print(5);
+        System.out.println(bog.computeWord("??????").length());
     }
     
 }
