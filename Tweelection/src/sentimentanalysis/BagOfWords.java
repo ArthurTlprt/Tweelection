@@ -5,6 +5,10 @@
  */
 package sentimentanalysis;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import static java.lang.Math.abs;
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -120,5 +124,49 @@ public class BagOfWords {
             }
             System.out.println();
         }
+    }
+    
+    
+    /* Load and save function */
+    public void save(String fileName) {
+        System.out.println("Saving...");
+        PrintWriter writer = null;
+        try{
+            writer = new PrintWriter(fileName);
+            writer.println(numberOfClasses);
+            
+            for(int i = 0; i < words.size(); i++) {
+                writer.print(words.get(i));
+                for(ArrayList<Integer> ocb : occurencesByClasses) {
+                    writer.print(";");
+                    writer.print(ocb.get(i));
+                }
+                writer.println();
+            }
+
+        } catch (IOException e) {
+           System.out.println("oups");
+        } finally {
+            if(writer != null)
+                writer.close();
+        }
+        
+        System.out.println("Saved !");
+    }
+    
+    public void load(String fileName) throws Exception {        
+        try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+            
+            while (line != null) {
+                read_line(line);
+                line = br.readLine();
+            }
+        }
+    }
+    
+    public void read_line(String line) {
+        
     }
 }
