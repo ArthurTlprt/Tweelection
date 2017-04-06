@@ -17,14 +17,20 @@ public class Tweelection {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        BagOfWords bog = new BagOfWords();
-        bog.addWord("Bonjour", 3);
-        bog.addWord("nul", 0);
-        bog.addWord("parfait", 5);
-        for(int i = 0; i < 125; i++)
-            bog.addWord("capitalisme", 0);
-        bog.print(5);
-        bog.save("bog.txt");
+        try {
+            BagOfWords bog = new BagOfWords();
+            bog.load("bog.txt");
+            bog.print(10);
+            /*bog.addWord("Bonjour", 3);
+            bog.addWord("nul", 0);
+            bog.addWord("parfait", 5);
+            for(int i = 0; i < 125; i++)
+                bog.addWord("capitalisme", 0);
+            bog.print(5);*/
+            //bog.save("bog.txt");
+        } catch (Exception e) {
+            System.out.println("Ton père le chien");
+        }
     }
     
 }

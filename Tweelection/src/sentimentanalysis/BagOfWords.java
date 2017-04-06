@@ -145,7 +145,7 @@ public class BagOfWords {
             }
 
         } catch (IOException e) {
-           System.out.println("oups");
+           System.out.println("Failed to save");
         } finally {
             if(writer != null)
                 writer.close();
@@ -154,19 +154,39 @@ public class BagOfWords {
         System.out.println("Saved !");
     }
     
-    public void load(String fileName) throws Exception {        
+    public void load(String fileName){        
         try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
-            
+            this.numberOfClasses = Integer.parseInt(line);
+            line = br.readLine();
             while (line != null) {
                 read_line(line);
                 line = br.readLine();
             }
+        } catch(Exception e) {
+            System.out.println("Failed to load");
         }
     }
     
     public void read_line(String line) {
-        
+        int semicolon = line.indexOf(";");
+        String word = line.substring(0, semicolon);
+        System.out.println(word);
+        line = line.substring(semicolon+1);
+        int number;
+        for(int i = 0; i < numberOfClasses; i++) {
+            semicolon = line.indexOf(";");
+            
+            if(semicolon != -1)
+                number = Integer.parseInt(line.substring(0, semicolon));
+            else
+                number = Integer.parseInt(line);
+            
+            for(int j = 0; j < number; j++)
+                this.addWord(word, i);
+            
+            line = line.substring(semicolon+1);
+        }
     }
 }
