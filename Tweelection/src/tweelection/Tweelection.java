@@ -5,6 +5,8 @@
  */
 package tweelection;
 
+import sentimentanalysis.BagOfWords;
+
 /**
  *
  * @author gerald
@@ -15,7 +17,21 @@ public class Tweelection {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        try {
+            BagOfWords bog = new BagOfWords();
+            //bog.learnReviews("rates.txt", "reviews.txt");
+            //bog.print(20);
+            bog.load("bog.txt");
+            /*bog.addWord("Bonjour", 3);
+            bog.addWord("nul", 0);
+            bog.addWord("parfait", 5);
+            for(int i = 0; i < 125; i++)
+                bog.addWord("capitalisme", 0);
+            bog.print(5);*/
+            //bog.save("bog.txt");
+        } catch (Exception e) {
+            System.out.println("Ton père le chien");
+        }
     }
     
 }
