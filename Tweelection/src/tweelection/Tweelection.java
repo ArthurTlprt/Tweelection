@@ -19,8 +19,9 @@ public class Tweelection {
     public static void main(String[] args) {
         try {
             BagOfWords bog = new BagOfWords();
+            //bog.learnReviews("rates.txt", "reviews.txt");
+            //bog.print(20);
             bog.load("bog.txt");
-            bog.print(10);
             /*bog.addWord("Bonjour", 3);
             bog.addWord("nul", 0);
             bog.addWord("parfait", 5);

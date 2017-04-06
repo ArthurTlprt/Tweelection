@@ -6,12 +6,15 @@
 package sentimentanalysis;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.Math.abs;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -126,10 +129,44 @@ public class BagOfWords {
         }
     }
     
+    /* Reads all the reviews from specified files */
+    public void learnReviews(String rateFile, String reviewFile) {
+        try { 
+            BufferedReader brRate = new BufferedReader(new FileReader(rateFile));
+            BufferedReader brReview = new BufferedReader(new FileReader(reviewFile));
+            
+            String lineRate, lineReview;
+            lineRate = brRate.readLine();
+            lineReview = brReview.readLine();
+            while(lineRate != null && lineReview != null) {
+                int rate = Integer.parseInt(lineRate.substring(0, 1));
+                String wordToAdd;
+                int space;
+                do {
+                    space = lineReview.indexOf(" ");
+                    if(space != -1) {
+                        wordToAdd = lineReview.substring(0, space);
+                        addWord(wordToAdd, rate);
+                        lineReview  = lineReview.substring(space+1);
+                    }
+                    
+                } while(space != -1);
+                
+                lineRate = brRate.readLine();
+                lineReview = brReview.readLine();
+            }
+            
+        } catch(FileNotFoundException e) {
+            System.out.println("Failed to load reviews");
+        } catch (IOException ex) {
+            Logger.getLogger(BagOfWords.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     /* Load and save function */
+    
+    /* Saves my BagOfWords in a specified file */
     public void save(String fileName) {
-        System.out.println("Saving...");
         PrintWriter writer = null;
         try{
             writer = new PrintWriter(fileName);
@@ -145,18 +182,17 @@ public class BagOfWords {
             }
 
         } catch (IOException e) {
-           System.out.println("Failed to save");
+           System.out.println("Failed to save Bag of Words");
         } finally {
             if(writer != null)
                 writer.close();
         }
-        
-        System.out.println("Saved !");
+
     }
     
+    /* Loads the BagOfWords from a specified file */
     public void load(String fileName){        
         try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            StringBuilder sb = new StringBuilder();
             String line = br.readLine();
             this.numberOfClasses = Integer.parseInt(line);
             line = br.readLine();
@@ -165,14 +201,14 @@ public class BagOfWords {
                 line = br.readLine();
             }
         } catch(Exception e) {
-            System.out.println("Failed to load");
+            System.out.println("Failed to load BagOfWords");
         }
     }
     
+    /* Reads a line */
     public void read_line(String line) {
         int semicolon = line.indexOf(";");
         String word = line.substring(0, semicolon);
-        System.out.println(word);
         line = line.substring(semicolon+1);
         int number;
         for(int i = 0; i < numberOfClasses; i++) {
@@ -189,4 +225,6 @@ public class BagOfWords {
             line = line.substring(semicolon+1);
         }
     }
+    
+    
 }
