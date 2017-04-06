@@ -38,8 +38,30 @@ public class Review {
         return classe;
     }
     
+    public String getWordByIndex(int index) {
+        return parsedText.get(index);
+    }
+    
+    public int getSize() {
+        return parsedText.size();
+    }
+    
     /* Miscellaneous */
     public void parseReview() {
+        parsedText = new ArrayList<>();
         
+        int space;
+        do {
+            space = text.indexOf(" ");
+            if(space != -1) {
+                parsedText.add(text.substring(0, space));
+                //System.out.println(parsedText.get(parsedText.size()-1));
+                //System.out.print("+");
+                text = text.substring(space+1);
+            }
+
+        } while(space != -1);
+        
+        System.out.println();            
     }
 }

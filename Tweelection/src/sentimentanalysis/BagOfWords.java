@@ -139,18 +139,15 @@ public class BagOfWords {
             lineRate = brRate.readLine();
             lineReview = brReview.readLine();
             while(lineRate != null && lineReview != null) {
-                int rate = Integer.parseInt(lineRate.substring(0, 1));
-                String wordToAdd;
-                int space;
-                do {
-                    space = lineReview.indexOf(" ");
-                    if(space != -1) {
-                        wordToAdd = lineReview.substring(0, space);
-                        addWord(wordToAdd, rate);
-                        lineReview  = lineReview.substring(space+1);
-                    }
-                    
-                } while(space != -1);
+                Review review = new Review();
+                review.setClasse(Integer.parseInt(lineRate.substring(0, 1)));
+                review.setText(lineReview);
+                review.parseReview();
+
+                for(int i = 0; i < review.getSize(); i++) {
+                    //System.out.println(review.getWordByIndex(i));
+                    addWord(review.getWordByIndex(i), review.getClasse());
+                }
                 
                 lineRate = brRate.readLine();
                 lineReview = brReview.readLine();
