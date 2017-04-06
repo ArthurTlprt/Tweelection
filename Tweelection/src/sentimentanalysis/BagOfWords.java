@@ -36,17 +36,36 @@ public class BagOfWords {
     
     public int getTotalOccurences(int wordIndex) {
         int result = 0;
-        for(int i = 0; i < occurencesByClasses.length; i++) {
-            result += occurencesByClasses[i].get(wordIndex);
+        for (ArrayList<Integer> obc : occurencesByClasses) {
+            result += obc.get(wordIndex);
         }
         
         return result;
+    }
+    
+    public void addOccurenceByIndex(int wordIndex, int classe) {
+        if(wordIndex >= 0 && wordIndex < words.size()) {
+            
+        }
+    }
+    
+    public void addOccurenceByWord(String word, int classe) {
+        
     }
     /* Setters */
     
     
     /* Miscellaneous */
-    public void addWord(String word) {
-        
+    public void addWord(String word, int classe) {
+        int wordIndex = getIndexByWord(word);
+        if(wordIndex == -1) {
+            /* Word unknown for now */
+            words.add(word);
+            for(ArrayList<Integer> obc : occurencesByClasses)
+                obc.add(0);
+            
+        } else {
+            /* Word known */
+        }
     }
 }
