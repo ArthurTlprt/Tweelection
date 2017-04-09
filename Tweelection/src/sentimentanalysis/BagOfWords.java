@@ -74,7 +74,7 @@ public class BagOfWords {
     
     /* Miscellaneous */
     
-    /* Computes a word to save it */
+    /* Computes a word to use it */
     public String computeWord(String word) {
         word = Normalizer.normalize(word, Normalizer.Form.NFD);
         word = word.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
@@ -86,7 +86,7 @@ public class BagOfWords {
     /* Adds a word to the database */
     public void addWord(String word, int classe) {
         word = computeWord(word);
-        if(word.length() == 0) 
+        if(word.length() <= 2) 
             return;
         
         int wordIndex = getIndexByWord(word);
@@ -144,10 +144,8 @@ public class BagOfWords {
                 review.setText(lineReview);
                 review.parseReview();
 
-                for(int i = 0; i < review.getSize(); i++) {
-                    //System.out.println(review.getWordByIndex(i));
+                for(int i = 0; i < review.getSize(); i++)
                     addWord(review.getWordByIndex(i), review.getClasse());
-                }
                 
                 lineRate = brRate.readLine();
                 lineReview = brReview.readLine();
@@ -223,5 +221,86 @@ public class BagOfWords {
         }
     }
     
+    
+    /* Gets the probable class of a specified word */
+    public double getWordClasse(String word) {
+        word = computeWord(word);
+        int index = getIndexByWord(word);
+        if(index != -1) {
+            double probableClasse = 0;
+            int number = 0;
+            int i = 0;
+            for(ArrayList<Integer> ocb : occurencesByClasses) {
+                probableClasse += ocb.get(index)*i;
+                number += ocb.get(index);
+                i++;
+            }
+            
+            return probableClasse/number;
+        } else 
+            return -1;
+    }
+    
+    /* Analyzes a sentence to get it's subjectivity */
+    public double analyzeReview(Review review) {
+        double classe = 0;
+        int numberOfWords = 0;
+        
+        for(int i = 0; i < review.getSize(); i++) {
+            double probableWordClasse = getWordClasse(review.getWordByIndex(i));
+            if(probableWordClasse != -1) {
+                classe += probableWordClasse;
+                numberOfWords++;
+            }
+        }
+        
+        return classe/numberOfWords;
+    }
+    
+    public double evaluateAccuracy(String rateFile, String reviewFile) {
+        int numberOfReviews = 0;
+        double actual, calculated;
+        double sum = 0;
+        
+        try { 
+            BufferedReader brRate = new BufferedReader(new FileReader(rateFile));
+            BufferedReader brReview = new BufferedReader(new FileReader(reviewFile));
+            
+            String lineRate, lineReview;
+            lineRate = brRate.readLine();
+            lineReview = brReview.readLine();
+            while(lineRate != null && lineReview != null) {
+                Review review = new Review();
+                review.setClasse(Integer.parseInt(lineRate.substring(0, 1)));
+                review.setText(lineReview);
+                review.parseReview();
+
+                actual = review.getClasse();
+                calculated = analyzeReview(review);
+                
+                //System.out.println(abs(actual - calculated));
+                if(Double.isNaN(abs(actual-calculated)))
+                    sum += 0;
+                else
+                    sum += abs(actual - calculated);
+                numberOfReviews++;
+                
+                lineRate = brRate.readLine();
+                lineReview = brReview.readLine();
+            }
+            
+            sum /= (5*numberOfReviews);
+            sum = 1 - sum;
+            sum *= 100;
+            return sum;
+            
+        } catch(FileNotFoundException e) {
+            System.out.println("Failed to load reviews");
+        } catch (IOException ex) {
+            Logger.getLogger(BagOfWords.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return -1;
+    }
     
 }

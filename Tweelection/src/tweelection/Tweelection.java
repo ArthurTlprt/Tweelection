@@ -6,6 +6,7 @@
 package tweelection;
 
 import sentimentanalysis.BagOfWords;
+import sentimentanalysis.Review;
 
 /**
  *
@@ -19,9 +20,11 @@ public class Tweelection {
     public static void main(String[] args) {
         try {
             BagOfWords bog = new BagOfWords();
-            bog.learnReviews("rates.txt", "reviews.txt");
-            bog.print(20);
-            bog.save("bog.txt");
+            //bog.learnReviews("rates.txt", "reviews.txt");
+            //bog.print(20);
+            bog.load("bog.txt");
+            System.out.println(bog.evaluateAccuracy("rates.txt", "reviews.txt"));
+            //System.out.println(bog.getWordClasse("jusqua"));
             /*bog.addWord("Bonjour", 3);
             bog.addWord("nul", 0);
             bog.addWord("parfait", 5);
