@@ -6,10 +6,15 @@
 package sentimentanalysis;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import static java.lang.Math.abs;
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -21,9 +26,10 @@ import java.util.logging.Logger;
  *
  * @author gerald
  */
-public class BagOfWords {
+public class BagOfWords implements Serializable {
     private ArrayList<String> words;
     private ArrayList<Integer>[] occurencesByClasses;
+    private ArrayList<Modifier> modifiers;
     
     private int numberOfClasses;
     /* Représentation :
@@ -38,6 +44,21 @@ public class BagOfWords {
         occurencesByClasses = new ArrayList[numberOfClasses];
         for(int i = 0; i < occurencesByClasses.length; i++)
             occurencesByClasses[i] = new ArrayList<>();
+        
+        modifiers = new ArrayList<>();
+    }
+    
+    public BagOfWords(BagOfWords bog) {
+        //new BagOfWords(this);
+        
+        this.numberOfClasses = bog.numberOfClasses;
+        this.words  = bog.words;
+        this.occurencesByClasses = bog.occurencesByClasses;
+        this.modifiers = new ArrayList<>();
+        if(bog.modifiers != null) {
+            for(int i = 0; i < bog.modifiers.size(); i++)
+                this.modifiers.add(new Modifier(bog.modifiers.get(i)));
+        }
     }
     
     /* Getters */
@@ -74,35 +95,6 @@ public class BagOfWords {
     
     /* Miscellaneous */
     
-    /* Computes a word to use it */
-    public String computeWord(String word) {
-        word = Normalizer.normalize(word, Normalizer.Form.NFD);
-        word = word.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-        word = word.replaceAll("[^a-zA-Z ]", "").toLowerCase();
-        word = word.replaceAll(" ", "");
-        return word;
-    }
-    
-    /* Adds a word to the database */
-    public void addWord(String word, int classe) {
-        word = computeWord(word);
-        if(word.length() <= 2) 
-            return;
-        
-        int wordIndex = getIndexByWord(word);
-        if(wordIndex == -1) {
-            /* Word unknown for now */
-            words.add(word);
-            for(ArrayList<Integer> obc : occurencesByClasses)
-                obc.add(0);
-            addWord(word, classe);
-        } else {
-            /* Word known */
-            int actual = occurencesByClasses[classe].get(wordIndex);
-            occurencesByClasses[classe].set(wordIndex, actual+1);
-        }
-    }
-    
     /* Prints n lines of my BagOfWord */
     public void print(int n) {
         System.out.print("Classe");
@@ -129,6 +121,39 @@ public class BagOfWords {
         }
     }
     
+    
+    /* Computes a word to use it */
+    public String computeWord(String word) {
+        word = Normalizer.normalize(word, Normalizer.Form.NFD);
+        word = word.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        word = word.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+        word = word.replaceAll(" ", "");
+        return word;
+    }
+    
+    
+    /* Learning */
+    /* Adds a word to the database */
+    public void addWord(String word, int classe) {
+        word = computeWord(word);
+        if(word.length() <= 2) 
+            return;
+        
+        int wordIndex = getIndexByWord(word);
+        if(wordIndex == -1) {
+            /* Word unknown for now */
+            words.add(word);
+            for(ArrayList<Integer> obc : occurencesByClasses)
+                obc.add(0);
+            addWord(word, classe);
+        } else {
+            /* Word known */
+            int actual = occurencesByClasses[classe].get(wordIndex);
+            occurencesByClasses[classe].set(wordIndex, actual+1);
+        }
+    }
+    
+    
     /* Reads all the reviews from specified files */
     public void learnReviews(String rateFile, String reviewFile) {
         try { 
@@ -144,8 +169,11 @@ public class BagOfWords {
                 review.setText(lineReview);
                 review.parseReview();
 
-                for(int i = 0; i < review.getSize(); i++)
-                    addWord(review.getWordByIndex(i), review.getClasse());
+                for(int i = 0; i < review.getSize(); i++) {
+                    if(isModifier(review.getWordByIndex(i)) == -1) {
+                        addWord(review.getWordByIndex(i), review.getClasse());
+                    }
+                }
                 
                 lineRate = brRate.readLine();
                 lineReview = brReview.readLine();
@@ -154,71 +182,34 @@ public class BagOfWords {
         } catch(FileNotFoundException e) {
             System.out.println("Failed to load reviews");
         } catch (IOException ex) {
+            //System.out.println("Prout");
             Logger.getLogger(BagOfWords.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }    
+    
+    /* Reading a modifier database */
+    public void addModifier(String word, int multiplier) {
+        Modifier m = new Modifier(word, multiplier);
+        modifiers.add(m);
     }
     
-    /* Load and save function */
+    /* Analyzing a sentence */
     
-    /* Saves my BagOfWords in a specified file */
-    public void save(String fileName) {
-        PrintWriter writer = null;
-        try{
-            writer = new PrintWriter(fileName);
-            writer.println(numberOfClasses);
-            
-            for(int i = 0; i < words.size(); i++) {
-                writer.print(words.get(i));
-                for(ArrayList<Integer> ocb : occurencesByClasses) {
-                    writer.print(";");
-                    writer.print(ocb.get(i));
-                }
-                writer.println();
-            }
-
-        } catch (IOException e) {
-           System.out.println("Failed to save Bag of Words");
-        } finally {
-            if(writer != null)
-                writer.close();
+    /* Tells if the word is a modifier */
+    public int isModifier(String word) {
+        word = computeWord(word);
+        if(word.length() <= 2)
+            return -1;
+        
+        if(modifiers.isEmpty())
+            return -1;
+        
+        for(int i = 0; i < modifiers.size(); i++) {
+            if(modifiers.get(i).getWord().equals(word))
+                return i;
         }
-
-    }
-    
-    /* Loads the BagOfWords from a specified file */
-    public void load(String fileName){        
-        try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line = br.readLine();
-            this.numberOfClasses = Integer.parseInt(line);
-            line = br.readLine();
-            while (line != null) {
-                read_line(line);
-                line = br.readLine();
-            }
-        } catch(Exception e) {
-            System.out.println("Failed to load BagOfWords");
-        }
-    }
-    
-    /* Reads a line */
-    public void read_line(String line) {
-        int semicolon = line.indexOf(";");
-        String word = line.substring(0, semicolon);
-        line = line.substring(semicolon+1);
-        int number;
-        for(int i = 0; i < numberOfClasses; i++) {
-            semicolon = line.indexOf(";");
-            
-            if(semicolon != -1)
-                number = Integer.parseInt(line.substring(0, semicolon));
-            else
-                number = Integer.parseInt(line);
-            
-            for(int j = 0; j < number; j++)
-                this.addWord(word, i);
-            
-            line = line.substring(semicolon+1);
-        }
+        
+        return -1;
     }
     
     
@@ -245,18 +236,29 @@ public class BagOfWords {
     public double analyzeReview(Review review) {
         double classe = 0;
         int numberOfWords = 0;
+        int multiplier = 1;
         
         for(int i = 0; i < review.getSize(); i++) {
+            int isModifier = isModifier(review.getWordByIndex(i));
+            if(isModifier != -1) {
+                multiplier *= modifiers.get(isModifier).getMultiplier();
+                //i++;
+                break;
+            }
             double probableWordClasse = getWordClasse(review.getWordByIndex(i));
             if(probableWordClasse != -1) {
                 classe += probableWordClasse;
                 numberOfWords++;
             }
+            
+            multiplier = 1;
         }
         
         return classe/numberOfWords;
     }
     
+    
+    /* Self evaluates it's accuracy via a given database */
     public double evaluateAccuracy(String rateFile, String reviewFile) {
         int numberOfReviews = 0;
         double actual, calculated;
@@ -278,7 +280,6 @@ public class BagOfWords {
                 actual = review.getClasse();
                 calculated = analyzeReview(review);
                 
-                //System.out.println(abs(actual - calculated));
                 if(Double.isNaN(abs(actual-calculated)))
                     sum += 0;
                 else
@@ -297,10 +298,50 @@ public class BagOfWords {
         } catch(FileNotFoundException e) {
             System.out.println("Failed to load reviews");
         } catch (IOException ex) {
+            System.out.println("jsp");
             Logger.getLogger(BagOfWords.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(Exception e) {
+            System.out.println("Prout");
+            System.out.println(e.getMessage());
         }
         
         return -1;
     }
     
+    
+    /* Serialization */
+    public void serialize() {
+        try {
+            FileOutputStream file;
+            file = new FileOutputStream("bog.tl");
+            
+            ObjectOutputStream obj = new ObjectOutputStream(file);
+            obj.writeObject(this);
+            
+            obj.close();
+            file.close();
+            
+        } catch(Exception e) {
+            System.out.println("Serialzation has failed");
+        }
+    }
+    
+    public BagOfWords deserialize() {
+        BagOfWords bog = null;
+        try {
+           
+           FileInputStream fileIn = new FileInputStream("bog.tl");
+           ObjectInputStream in = new ObjectInputStream(fileIn);
+           
+           bog = (BagOfWords) in.readObject();
+           
+           in.close();
+           fileIn.close();
+           
+        }catch(Exception e) {
+            System.out.println("Deserialization has failed");
+        }
+        
+        return bog;
+    }
 }
