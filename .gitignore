@@ -1,5 +1,4 @@
-Tweelection/nbproject/private/
-Tweelection/build/
-Tweelection/build/classes/tweetExtraction/tweetExtraction.class
+Tweelection/build/*
 Tweelection/nbproject/private/config.properties
 Tweelection/nbproject/private/private.properties
+Tweelection/nbproject/project.properties
