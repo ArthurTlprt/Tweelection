@@ -5,13 +5,10 @@
  */
 package tweetExtraction;
 
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import twitter4j.Query;
@@ -20,6 +17,8 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -71,8 +70,11 @@ public class TweetAboutCandidate {
     }
 
     public void writeInFile(String fileName) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(now);
         try {
-            FileOutputStream fout = new FileOutputStream(fileName);
+            FileOutputStream fout = new FileOutputStream(fileName + now);
             ObjectOutputStream oos = new ObjectOutputStream(fout);
             oos.writeObject(tweets);
         } catch (FileNotFoundException e) {
