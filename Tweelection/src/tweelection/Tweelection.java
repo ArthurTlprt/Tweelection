@@ -22,7 +22,7 @@ public class Tweelection {
         
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
         tweetAboutFillon.extractTweets(200);
-        tweetAboutFillon.writeInFile("fillon");
+        tweetAboutFillon.writeInFile();
         
         try {
             BagOfWords bog = new BagOfWords();

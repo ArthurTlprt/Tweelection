@@ -69,18 +69,20 @@ public class TweetAboutCandidate {
         }
     }
 
-    public void writeInFile(String fileName) {
+    public void writeInFile() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
+        
         System.out.println(now);
+        
         try {
-            FileOutputStream fout = new FileOutputStream(fileName + now);
+            FileOutputStream fout = new FileOutputStream(candidateName + now);
             ObjectOutputStream oos = new ObjectOutputStream(fout);
             oos.writeObject(tweets);
         } catch (FileNotFoundException e) {
-            System.out.println("failed to create a file " + fileName);
+            System.out.println("failed to create a file " + candidateName);
         } catch (IOException e) {
-            System.err.println("Failed to write in file " + fileName);
+            System.err.println("Failed to write in file " + candidateName);
         }
     }
 
