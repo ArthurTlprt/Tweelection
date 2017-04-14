@@ -7,6 +7,7 @@ package tweelection;
 
 import sentimentanalysis.BagOfWords;
 import sentimentanalysis.Review;
+import tweetExtraction.TweetAboutCandidate;
 
 /**
  *
@@ -18,6 +19,11 @@ public class Tweelection {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
+        tweetAboutFillon.extractTweets(200);
+        tweetAboutFillon.writeInFile("fillon");
+        
         try {
             BagOfWords bog = new BagOfWords();
             bog = new BagOfWords(bog.deserialize());
@@ -48,6 +54,7 @@ public class Tweelection {
             System.out.println("Ton père le chien");
             //System.out.println(e.getMessage());
         }
+        
     }
     
 }

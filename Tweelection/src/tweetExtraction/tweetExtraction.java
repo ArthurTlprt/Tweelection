@@ -13,7 +13,8 @@ public class tweetExtraction {
 
     public static void main(String[] args) {
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
-        tweetAboutFillon.extractTweets(100);
+        tweetAboutFillon.extractTweets(1000);
+        tweetAboutFillon.writeInFile("fillon");
     }
 
 }

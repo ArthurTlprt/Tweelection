@@ -5,6 +5,14 @@
  */
 package tweetExtraction;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -20,10 +28,10 @@ import twitter4j.conf.ConfigurationBuilder;
 public class TweetAboutCandidate {
 
     private final String candidateName;
-    
+
     private Query query;
-    private List<Status> tweets;
-    
+    private final List<Status> tweets;
+
     private ConfigurationBuilder cb;
     private TwitterFactory tf;
     private Twitter twitter;
@@ -31,6 +39,7 @@ public class TweetAboutCandidate {
     public TweetAboutCandidate(String candidateName) {
         this.candidateName = candidateName;
         this.query = new Query(candidateName);
+        this.tweets = new ArrayList<Status>();
         cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
                 .setOAuthConsumerKey("ZroXRDzuSrvwL6hYhgizrkQtR")
@@ -45,20 +54,36 @@ public class TweetAboutCandidate {
         try {
             query.setCount(100);
             QueryResult result = twitter.search(query);
-            
+
             int b = 0;
             while (result.hasNext() && b < numberOfTweets) {
-                b+=100;
+                b += 100;
                 query = result.nextQuery();
                 result = twitter.search(query);
-                for( Status status: result.getTweets()) {
+                for (Status status : result.getTweets()) {
                     tweets.add(status);
                 }
             }
-            System.out.println(b);
+            System.out.println(tweets.size());
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    public void writeInFile(String fileName) {
+        try {
+            FileOutputStream fout = new FileOutputStream(fileName);
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
+            oos.writeObject(tweets);
+        } catch (FileNotFoundException e) {
+            System.out.println("failed to create a file " + fileName);
+        } catch (IOException e) {
+            System.err.println("Failed to write in file " + fileName);
+        }
+    }
+
+    public List<Status> getTweets() {
+        return this.tweets;
     }
 
 }
