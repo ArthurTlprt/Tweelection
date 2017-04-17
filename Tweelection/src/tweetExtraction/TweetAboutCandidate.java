@@ -76,7 +76,7 @@ public class TweetAboutCandidate {
         System.out.println(now);
         
         try {
-            FileOutputStream fout = new FileOutputStream(candidateName + now);
+            FileOutputStream fout = new FileOutputStream("tweets/" + candidateName + now);
             ObjectOutputStream oos = new ObjectOutputStream(fout);
             oos.writeObject(tweets);
         } catch (FileNotFoundException e) {

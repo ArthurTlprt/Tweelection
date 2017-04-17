@@ -19,11 +19,27 @@ public class Tweelection {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
-        tweetAboutFillon.extractTweets(200);
+        tweetAboutFillon.extractTweets(1000);
         tweetAboutFillon.writeInFile();
-        
+
+        TweetAboutCandidate tweetAboutLepen = new TweetAboutCandidate("Marine");
+        tweetAboutLepen.extractTweets(1000);
+        tweetAboutLepen.writeInFile();
+
+        TweetAboutCandidate tweetAboutMacron = new TweetAboutCandidate("macron");
+        tweetAboutMacron.extractTweets(1000);
+        tweetAboutMacron.writeInFile();
+
+        TweetAboutCandidate tweetAboutHamon = new TweetAboutCandidate("hamon");
+        tweetAboutHamon.extractTweets(1000);
+        tweetAboutHamon.writeInFile();
+
+        TweetAboutCandidate tweetAboutMelanchon = new TweetAboutCandidate("melanchon");
+        tweetAboutMelanchon.extractTweets(1000);
+        tweetAboutMelanchon.writeInFile();
+
         try {
             BagOfWords bog = new BagOfWords();
             bog = new BagOfWords(bog.deserialize());
@@ -54,7 +70,7 @@ public class Tweelection {
             System.out.println("Ton père le chien");
             //System.out.println(e.getMessage());
         }
-        
+
     }
-    
+
 }
