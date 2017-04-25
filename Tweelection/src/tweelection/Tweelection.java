@@ -5,6 +5,7 @@
  */
 package tweelection;
 
+import java.util.Date;
 import sentimentanalysis.BagOfWords;
 import sentimentanalysis.Review;
 import tweetExtraction.TweetAboutCandidate;
@@ -21,7 +22,7 @@ public class Tweelection {
     public static void main(String[] args) {
 
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
-        tweetAboutFillon.extractTweets(2400);
+        tweetAboutFillon.extractTweetsFromNowToDate(new Date(2017, 4, 24));
         tweetAboutFillon.writeInFile();
 
         /*TweetAboutCandidate tweetAboutLepen = new TweetAboutCandidate("Marine");

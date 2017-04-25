@@ -20,6 +20,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  *
@@ -61,7 +62,7 @@ public class TweetAboutCandidate {
             QueryResult result = twitter.search(query);
 
             int b = 0;
-            while (result.hasNext() && b < numberOfTweets) {
+            do {
                 b += 100;
                 query = result.nextQuery();
                 result = twitter.search(query);
@@ -70,7 +71,34 @@ public class TweetAboutCandidate {
                     dates.add(status.getCreatedAt().toString());
                     texts.add(status.getText());
                 }
-            }
+            } while (result.hasNext() && b < numberOfTweets);
+            System.out.println(dates.size());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    
+    public void extractTweetsFromNowToDate(Date date) {
+        try {
+            query.setCount(100);
+            QueryResult result = twitter.search(query);
+
+            Date currentDate = null;
+            do {
+                query = result.nextQuery();
+                result = twitter.search(query);
+                for (Status status : result.getTweets()) {
+                    //tweets.add(status);
+                    dates.add(status.getCreatedAt().toString());
+                    texts.add(status.getText());
+                    currentDate = status.getCreatedAt();
+                }
+                if(!result.hasNext()) {
+                    System.out.println("Extraction arrêtée à " + currentDate);
+                }
+            } while (result.hasNext() && date.after(currentDate));
+            
             System.out.println(dates.size());
         } catch (Exception e) {
             System.out.println(e);
