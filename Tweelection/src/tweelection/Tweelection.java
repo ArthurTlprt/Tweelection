@@ -21,10 +21,10 @@ public class Tweelection {
     public static void main(String[] args) {
 
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
-        tweetAboutFillon.extractTweets(1000);
+        tweetAboutFillon.extractTweets(2400);
         tweetAboutFillon.writeInFile();
 
-        TweetAboutCandidate tweetAboutLepen = new TweetAboutCandidate("Marine");
+        /*TweetAboutCandidate tweetAboutLepen = new TweetAboutCandidate("Marine");
         tweetAboutLepen.extractTweets(1000);
         tweetAboutLepen.writeInFile();
 
@@ -38,7 +38,7 @@ public class Tweelection {
 
         TweetAboutCandidate tweetAboutMelanchon = new TweetAboutCandidate("melanchon");
         tweetAboutMelanchon.extractTweets(1000);
-        tweetAboutMelanchon.writeInFile();
+        tweetAboutMelanchon.writeInFile();*/
 
         try {
             BagOfWords bog = new BagOfWords();
