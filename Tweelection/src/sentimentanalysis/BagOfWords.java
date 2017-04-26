@@ -16,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import static java.lang.Math.abs;
+import static java.lang.Math.round;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -170,7 +171,7 @@ public class BagOfWords implements Serializable {
                 review.parseReview();
 
                 for(int i = 0; i < review.getSize(); i++) {
-                    if(isModifier(review.getWordByIndex(i)) == -1) {
+                    if(isModifier(review.getWordByIndex(i)) == 0) {
                         addWord(review.getWordByIndex(i), review.getClasse());
                     }
                 }
@@ -199,17 +200,17 @@ public class BagOfWords implements Serializable {
     public int isModifier(String word) {
         word = computeWord(word);
         if(word.length() <= 2)
-            return -1;
+            return 0;
         
         if(modifiers.isEmpty())
-            return -1;
+            return 0;
         
         for(int i = 0; i < modifiers.size(); i++) {
             if(modifiers.get(i).getWord().equals(word))
                 return i;
         }
         
-        return -1;
+        return 0;
     }
     
     
@@ -234,26 +235,59 @@ public class BagOfWords implements Serializable {
     
     /* Analyzes a sentence to get it's subjectivity */
     public double analyzeReview(Review review) {
-        double classe = 0;
+        float classe = 0;
+        float previousClasse =-1;
         int numberOfWords = 0;
         int multiplier = 1;
+        boolean known = false;
+        
         
         for(int i = 0; i < review.getSize(); i++) {
+            System.out.println(i + " : " + review.getWordByIndex(i));
             int isModifier = isModifier(review.getWordByIndex(i));
-            if(isModifier != -1) {
-                multiplier *= modifiers.get(isModifier).getMultiplier();
-                //i++;
-                break;
+            if(isModifier != 0) {
+                multiplier = modifiers.get(isModifier).getMultiplier();
+                classe -= previousClasse;
+                float toAdd = (float) (multiplier*previousClasse);
+                if(toAdd < 0)
+                    toAdd = 0;
+                if(toAdd > 5)
+                    toAdd = 5;
+                classe += toAdd;
+            //i++;
+                //break;
+            } else {
+                double probableWordClasse = getWordClasse(review.getWordByIndex(i));
+                if(probableWordClasse != -1) {
+                    float toAdd = (float) (multiplier*probableWordClasse);
+                    if(toAdd < 0)
+                        toAdd = 0;
+                    if(toAdd > 5)
+                        toAdd = 5;
+                    classe += toAdd;
+                    numberOfWords++;
+                    known = true;
+                    previousClasse = toAdd;
+                }
+
+                multiplier = 1;
             }
-            double probableWordClasse = getWordClasse(review.getWordByIndex(i));
-            if(probableWordClasse != -1) {
-                classe += probableWordClasse;
-                numberOfWords++;
-            }
-            
-            multiplier = 1;
         }
         
+        if(!known)
+            return 3;
+        
+        if(classe == 0)
+            return 0;
+        
+        review.setClasse(round(classe));
+        review.parseReview();
+        for(int i = 0; i < review.getSize(); i++) {
+            if(isModifier(review.getWordByIndex(i)) == 0) {
+                addWord(review.getWordByIndex(i), review.getClasse());
+            }
+        }
+                
         return classe/numberOfWords;
     }
     
