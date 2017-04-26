@@ -5,10 +5,17 @@
  */
 package tweelection;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import org.knowm.xchart.QuickChart;
+import org.knowm.xchart.SwingWrapper;
 import sentimentanalysis.BagOfWords;
 import sentimentanalysis.Review;
 import tweetExtraction.TweetAboutCandidate;
+import org.knowm.xchart.XYChart;
 
 /**
  *
@@ -19,11 +26,13 @@ public class Tweelection {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
 
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
-        tweetAboutFillon.extractTweetsFromNowToDate(new Date(2017, 4, 24));
-        tweetAboutFillon.writeInFile();
+        
+        Calendar date = new GregorianCalendar(2017, 04, 26, 9, 0);
+
+        tweetAboutFillon.extractTweetsFromNowToDate(date);
 
         /*TweetAboutCandidate tweetAboutLepen = new TweetAboutCandidate("Marine");
         tweetAboutLepen.extractTweets(1000);
@@ -40,7 +49,7 @@ public class Tweelection {
         TweetAboutCandidate tweetAboutMelanchon = new TweetAboutCandidate("melanchon");
         tweetAboutMelanchon.extractTweets(1000);
         tweetAboutMelanchon.writeInFile();*/
-
+        
         try {
             BagOfWords bog = new BagOfWords();
             bog = new BagOfWords(bog.deserialize());
