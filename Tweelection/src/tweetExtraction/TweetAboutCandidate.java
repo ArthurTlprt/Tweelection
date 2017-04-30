@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.GregorianCalendar;
  * @author arthur
  */
 public class TweetAboutCandidate {
-    
+
     private static final int hourInMilli = 600000;
 
     private final String candidateName;
@@ -59,10 +60,40 @@ public class TweetAboutCandidate {
         twitter = tf.getInstance();
     }
 
+    public void extractThisDay(String day) throws ParseException {
+
+        Calendar dateStart = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("y-M-d");
+        dateStart.setTime(sdf.parse(day));
+        Calendar currentDate = Calendar.getInstance();
+
+        try {
+            query.setCount(100);
+            query.setUntil(day);
+            QueryResult result = twitter.search(query);
+
+            
+            for (int i = 0; i < 2; i++) {
+                query = result.nextQuery();
+                result = twitter.search(query);
+                for (Status status : result.getTweets()) {
+                    texts.add(status.getText());
+                    currentDate.setTime(status.getCreatedAt());
+                }
+            }
+            System.out.println("Extraction arrêtée à " + currentDate);
+            writeInFile(day);
+            this.texts.clear();
+
+        } catch (Exception e) {
+            System.err.println("In extractTweet date " + e);
+        }
+    }
+
     public void extractTweetsFromNowToDate(Calendar date) {
         Calendar dateStart = new GregorianCalendar();
-        
-        int i=1;
+
+        int i = 1;
         try {
             query.setCount(100);
             QueryResult result = twitter.search(query);
@@ -73,38 +104,29 @@ public class TweetAboutCandidate {
                 result = twitter.search(query);
                 for (Status status : result.getTweets()) {
                     texts.add(status.getText());
-                    
+
                     currentDate.setTime(status.getCreatedAt());
-                    
-                    //System.out.print("difference ");
-                    //System.out.println(dateStart.getTimeInMillis() - currentDate.getTimeInMillis());
-                    
+
                     if (dateStart.getTimeInMillis() - currentDate.getTimeInMillis() > i * hourInMilli) {
                         System.out.println("Extraction arrêtée à " + currentDate);
-                        writeInFile(currentDate);
+                        writeInFile(currentDate.toString());
                         this.texts.clear();
                         dateStart.setTime(currentDate.getTime());
                         i++;
                     }
-                    
+
                 }
             } while (true);
-            
+
         } catch (Exception e) {
             System.err.println("In extractTweet date " + e);
         }
     }
 
-
-    private void writeInFile(Calendar date) {
-        System.out.println(date.toString());
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-
-        System.out.println(now);
-
+    private void writeInFile(String date) {
+        String path = "tweets_files/" + candidateName + "/" + date;
         try {
-            PrintWriter writer = new PrintWriter("tweets_files/" + candidateName + "/" + date.getTime().toString(), "UTF-8");
+            PrintWriter writer = new PrintWriter(path, "UTF-8");
 
             for (String text : texts) {
                 writer.println(text);

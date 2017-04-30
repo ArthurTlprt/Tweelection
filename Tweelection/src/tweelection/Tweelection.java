@@ -23,33 +23,21 @@ import org.knowm.xchart.XYChart;
  */
 public class Tweelection {
 
+    private static final String[] period = {"2017-04-21", "2017-04-22", "2017-04-23", "2017-04-24"};
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws ParseException {
 
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
-        
-        Calendar date = new GregorianCalendar(2017, 04, 26, 9, 0);
 
-        tweetAboutFillon.extractTweetsFromNowToDate(date);
+        for (String day : period) {
+            //tweetAboutFillon.extractThisDay(day);
+        }
 
-        /*TweetAboutCandidate tweetAboutLepen = new TweetAboutCandidate("Marine");
-        tweetAboutLepen.extractTweets(1000);
-        tweetAboutLepen.writeInFile();
-
-        TweetAboutCandidate tweetAboutMacron = new TweetAboutCandidate("macron");
-        tweetAboutMacron.extractTweets(1000);
-        tweetAboutMacron.writeInFile();
-
-        TweetAboutCandidate tweetAboutHamon = new TweetAboutCandidate("hamon");
-        tweetAboutHamon.extractTweets(1000);
-        tweetAboutHamon.writeInFile();
-
-        TweetAboutCandidate tweetAboutMelanchon = new TweetAboutCandidate("melanchon");
-        tweetAboutMelanchon.extractTweets(1000);
-        tweetAboutMelanchon.writeInFile();*/
-        
+        //Calendar date = new GregorianCalendar(2017, 04, 26, 9, 0);
+        //tweetAboutFillon.extractTweetsFromNowToDate(date);
         try {
             BagOfWords bog = new BagOfWords();
             bog = new BagOfWords(bog.deserialize());
