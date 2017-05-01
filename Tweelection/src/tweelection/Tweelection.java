@@ -5,11 +5,14 @@
  */
 package tweelection;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
 import sentimentanalysis.BagOfWords;
@@ -23,17 +26,39 @@ import org.knowm.xchart.XYChart;
  */
 public class Tweelection {
 
-    private static final String[] period = {"2017-04-21", "2017-04-22", "2017-04-23", "2017-04-24"};
+    private static List<String> period;
+
+    private static void setPeriod(String str_startDate, String str_endDate) throws ParseException {
+        period = new ArrayList<String>();
+
+        DateFormat formatter;
+
+        formatter = new SimpleDateFormat("yyyy-MM-dd");
+        //formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Date startDate = (Date) formatter.parse(str_startDate);
+        Date endDate = (Date) formatter.parse(str_endDate);
+        long interval = 24 * 1000 * 60 * 60; // 1 hour in millis
+        long endTime = endDate.getTime(); // create your endtime here, possibly using Calendar or Date
+        long curTime = startDate.getTime();
+        while (curTime <= endTime) {
+            System.out.println(formatter.format(curTime));
+            period.add(formatter.format(curTime));   
+            curTime += interval;
+        }
+
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws ParseException {
+        
+        setPeriod("2017-04-01", "2017-04-29");
 
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
-
-        for (String day : period) {
-            //tweetAboutFillon.extractThisDay(day);
+        
+        for(String day: period) {
+            tweetAboutFillon.extractThisDay(day);
         }
 
         //Calendar date = new GregorianCalendar(2017, 04, 26, 9, 0);

@@ -62,26 +62,19 @@ public class TweetAboutCandidate {
 
     public void extractThisDay(String day) throws ParseException {
 
-        Calendar dateStart = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("y-M-d");
-        dateStart.setTime(sdf.parse(day));
-        Calendar currentDate = Calendar.getInstance();
-
         try {
             query.setCount(100);
-            query.setUntil(day);
+            query.setUntil("2017-04-21");
             QueryResult result = twitter.search(query);
 
             
-            for (int i = 0; i < 2; i++) {
-                query = result.nextQuery();
+            for (int i = 0; i < 2; i++, query = result.nextQuery()) {
                 result = twitter.search(query);
                 for (Status status : result.getTweets()) {
-                    texts.add(status.getText());
-                    currentDate.setTime(status.getCreatedAt());
+                    //texts.add(status.getText());
+                    //currentDate.setTime(status.getCreatedAt());
                 }
             }
-            System.out.println("Extraction arrêtée à " + currentDate);
             writeInFile(day);
             this.texts.clear();
 
