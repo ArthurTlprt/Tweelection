@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 import twitter4j.TwitterException;
 
 /**
@@ -45,6 +46,8 @@ public class TweetAboutCandidate {
     private final TwitterFactory tf;
     private final Twitter twitter;
 
+    private List<String> period;
+
     public TweetAboutCandidate(String candidateName) {
         this.candidateName = candidateName;
         this.query = new Query(candidateName);
@@ -61,30 +64,37 @@ public class TweetAboutCandidate {
         twitter = tf.getInstance();
     }
 
-    public void extractThisDay(String day) throws ParseException {
+    public void setPeriod(List<String> period) {
+        this.period = period;
+    }
 
-        try {
-            query = new Query(candidateName);
-            query.setCount(1);
-            System.out.println(day);
-            query.setUntil(day);
-            QueryResult result = null;
-            result = twitter.search(query);
-
-            for (int i = 0; i < 2; i++) {
-                query = result.nextQuery();
+    public void extractThisDay() throws ParseException {
+        period.forEach((day) -> {
+            try {
+                query = new Query(candidateName);
+                query.setCount(100);
+                System.out.println(day);
+                query.setUntil(day);
+                QueryResult result = null;
                 result = twitter.search(query);
-                for (Status status : result.getTweets()) {
-                    System.out.println(status.getCreatedAt().toString());
-                    texts.add(status.getText());
-                }
-            }
-            writeInFile(day);
-            this.texts.clear();
 
-        } catch (TwitterException e) {
-            System.err.println("In extractTweet date " + e);
-        }
+                for (int i = 0; i < 5; i++) {
+                    query = result.nextQuery();
+                    result = twitter.search(query);
+                    for (Status status : result.getTweets()) {
+                        System.out.println(status.getCreatedAt().toString());
+                        texts.add(status.getText());
+                    }
+                }
+                writeInFile(day);
+                this.texts.clear();
+
+            } catch (TwitterException e) {
+                System.err.println("In extractTweet date " + e);
+            }
+            //TimeUnit.SECONDS.sleep(5);
+        });
+
     }
 
     public void extractTweetsFromNowToDate(Calendar date) {

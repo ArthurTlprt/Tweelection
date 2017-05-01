@@ -52,19 +52,13 @@ public class Tweelection {
      */
     public static void main(String[] args) throws ParseException, InterruptedException {
         
-        setPeriod("2017-04-01", "2017-04-30");
+        setPeriod("2017-04-22", "2017-04-30");
 
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
+        tweetAboutFillon.setPeriod(period);
+        tweetAboutFillon.extractThisDay();  //fonctionne
         
-        tweetAboutFillon.extractThisDay("2017-04-29");  //fonctionne
-        
-        for(String day: period) {
-            tweetAboutFillon.extractThisDay(new String(day));   //fonctionne pas
-            TimeUnit.SECONDS.sleep(1);
-        }
 
-        //Calendar date = new GregorianCalendar(2017, 04, 26, 9, 0);
-        //tweetAboutFillon.extractTweetsFromNowToDate(date);
         try {
             BagOfWords bog = new BagOfWords();
             bog = new BagOfWords(bog.deserialize());
