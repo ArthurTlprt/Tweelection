@@ -41,7 +41,7 @@ public class Tweelection {
         long endTime = endDate.getTime(); // create your endtime here, possibly using Calendar or Date
         long curTime = startDate.getTime();
         while (curTime <= endTime) {
-            period.add(formatter.format(curTime));   
+            period.add(formatter.format(curTime));
             curTime += interval;
         }
 
@@ -51,13 +51,33 @@ public class Tweelection {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws ParseException, InterruptedException {
-        
+
         setPeriod("2017-04-22", "2017-04-30");
+
+
+        //on peut faire ça pour chaque candidat maintenant
 
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
         tweetAboutFillon.setPeriod(period);
-        tweetAboutFillon.extractThisDay();  //fonctionne
-        
+        //tweetAboutFillon.extractThisDay();
+
+        TweetAboutCandidate tweetAboutMelenchon = new TweetAboutCandidate("melenchon");
+        tweetAboutMelenchon.setPeriod(period);
+        //tweetAboutMelenchon.extractThisDay();
+
+        TweetAboutCandidate tweetAboutHamon = new TweetAboutCandidate("hamon");
+        tweetAboutHamon.setPeriod(period);
+        //tweetAboutHamon.extractThisDay();
+
+        TweetAboutCandidate tweetAboutMacron = new TweetAboutCandidate("macron");
+        tweetAboutMacron.setPeriod(period);
+        //tweetAboutMacron.extractThisDay();
+
+        TweetAboutCandidate tweetAboutMLP = new TweetAboutCandidate("MLP");
+        tweetAboutMLP.setPeriod(period);
+        tweetAboutMLP.extractThisDay();
+
+
 
         try {
             BagOfWords bog = new BagOfWords();
