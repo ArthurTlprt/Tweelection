@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import twitter4j.TwitterException;
 
 /**
  *
@@ -63,22 +64,25 @@ public class TweetAboutCandidate {
     public void extractThisDay(String day) throws ParseException {
 
         try {
-            query.setCount(100);
-            query.setUntil("2017-04-21");
-            QueryResult result = twitter.search(query);
+            query = new Query(candidateName);
+            query.setCount(1);
+            System.out.println(day);
+            query.setUntil(day);
+            QueryResult result = null;
+            result = twitter.search(query);
 
-            
-            for (int i = 0; i < 2; i++, query = result.nextQuery()) {
+            for (int i = 0; i < 2; i++) {
+                query = result.nextQuery();
                 result = twitter.search(query);
                 for (Status status : result.getTweets()) {
-                    //texts.add(status.getText());
-                    //currentDate.setTime(status.getCreatedAt());
+                    System.out.println(status.getCreatedAt().toString());
+                    texts.add(status.getText());
                 }
             }
             writeInFile(day);
             this.texts.clear();
 
-        } catch (Exception e) {
+        } catch (TwitterException e) {
             System.err.println("In extractTweet date " + e);
         }
     }

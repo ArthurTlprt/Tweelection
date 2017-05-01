@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
 import sentimentanalysis.BagOfWords;
@@ -34,14 +35,12 @@ public class Tweelection {
         DateFormat formatter;
 
         formatter = new SimpleDateFormat("yyyy-MM-dd");
-        //formatter = new SimpleDateFormat("dd-MM-yyyy");
         Date startDate = (Date) formatter.parse(str_startDate);
         Date endDate = (Date) formatter.parse(str_endDate);
         long interval = 24 * 1000 * 60 * 60; // 1 hour in millis
         long endTime = endDate.getTime(); // create your endtime here, possibly using Calendar or Date
         long curTime = startDate.getTime();
         while (curTime <= endTime) {
-            System.out.println(formatter.format(curTime));
             period.add(formatter.format(curTime));   
             curTime += interval;
         }
@@ -51,14 +50,17 @@ public class Tweelection {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) throws ParseException, InterruptedException {
         
-        setPeriod("2017-04-01", "2017-04-29");
+        setPeriod("2017-04-01", "2017-04-30");
 
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
         
+        tweetAboutFillon.extractThisDay("2017-04-29");  //fonctionne
+        
         for(String day: period) {
-            tweetAboutFillon.extractThisDay(day);
+            tweetAboutFillon.extractThisDay(new String(day));   //fonctionne pas
+            TimeUnit.SECONDS.sleep(1);
         }
 
         //Calendar date = new GregorianCalendar(2017, 04, 26, 9, 0);
