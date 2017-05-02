@@ -47,6 +47,14 @@ public class Review {
     }
     
     /* Miscellaneous */
+    public void printParsedText() {
+        for(String s : parsedText) {
+            System.out.print(s + " ");
+        }
+        
+        System.out.println("");
+    }
+    
     public void parseReview() {
         parsedText = new ArrayList<>();
         
@@ -58,6 +66,8 @@ public class Review {
                 //System.out.println(parsedText.get(parsedText.size()-1));
                 //System.out.print("+");
                 text = text.substring(space+1);
+            } else {
+                parsedText.add(text);
             }
 
         } while(space != -1);
