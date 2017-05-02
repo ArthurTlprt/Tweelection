@@ -52,9 +52,8 @@ public class Tweelection {
      */
     public static void main(String[] args) throws ParseException, InterruptedException {
 
-        setPeriod("2017-04-24", "2017-04-30");
+        setPeriod("2017-04-28", "2017-04-30");
         
-        /*
         TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon", period);
         TweetAboutCandidate tweetAboutMelenchon = new TweetAboutCandidate("melenchon", period);
         TweetAboutCandidate tweetAboutHamon = new TweetAboutCandidate("hamon", period);
@@ -64,9 +63,7 @@ public class Tweelection {
         TweetAboutCandidate tweetAboutDupont_Aignan = new TweetAboutCandidate("dupont-aignan", period);
         TweetAboutCandidate tweetAboutPoutou = new TweetAboutCandidate("poutou", period);
         TweetAboutCandidate tweetAboutArthaud = new TweetAboutCandidate("arthaud", period);
-        */
         
-        TweetAboutCandidate tweetAboutPotatoe = new TweetAboutCandidate("potatoe", period);
 
         try {
             BagOfWords bog = new BagOfWords();

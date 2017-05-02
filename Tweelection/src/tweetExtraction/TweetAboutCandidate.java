@@ -74,31 +74,48 @@ public class TweetAboutCandidate {
 
     public void extractThisDay() throws ParseException {
         period.forEach((day) -> {
-            try {
-                query = new Query(candidateName);
-                query.setCount(100);
-                System.out.println(day);
-                query.setUntil(day);
-                QueryResult result = null;
-                result = twitter.search(query);
 
-                for (int i = 0; i < 2; i++) {
-                    query = result.nextQuery();
+            if (isNotExtracted(day)) {
+                try {
+                    query = new Query(candidateName);
+                    query.setCount(100);
+                    System.out.println(day);
+                    query.setUntil(day);
+                    QueryResult result = null;
                     result = twitter.search(query);
-                    for (Status status : result.getTweets()) {
-                        //System.out.println(status.getCreatedAt().toString());
-                        texts.add(status.getText());
+
+                    for (int i = 0; i < 2; i++) {
+                        query = result.nextQuery();
+                        result = twitter.search(query);
+                        for (Status status : result.getTweets()) {
+                            //System.out.println(status.getCreatedAt().toString());
+                            texts.add(status.getText());
+                        }
                     }
+                    writeInFile(day);
+                    this.texts.clear();
+
+                } catch (TwitterException e) {
+                    System.err.println("In extractTweet date " + e);
                 }
-                writeInFile(day);
-                this.texts.clear();
-
-            } catch (TwitterException e) {
-                System.err.println("In extractTweet date " + e);
             }
-            //TimeUnit.SECONDS.sleep(5);
         });
+    }
+    
+    public Boolean isNotExtracted(String day) {
+        String path = "tweets_files/" + candidateName + "/" + day;
+        File fileToSaveTweets = new File(path);
 
+        File folderToSaveTweets = new File("tweets_files/" + candidateName);
+        if (!folderToSaveTweets.exists() || !folderToSaveTweets.isDirectory()) {
+            folderToSaveTweets.mkdir();
+        }
+
+        if (fileToSaveTweets.exists()) {
+            return false;
+        }
+        
+        return true;
     }
 
     public void extractTweetsFromNowToDate(Calendar date) {
@@ -136,17 +153,7 @@ public class TweetAboutCandidate {
 
     private void writeInFile(String date) {
         String path = "tweets_files/" + candidateName + "/" + date;
-        File fileToSaveTweets = new File(path);
-        
-        File folderToSaveTweets = new File("tweets_files/" + candidateName);
-        if (!folderToSaveTweets.exists() || !folderToSaveTweets.isDirectory()) {
-            folderToSaveTweets.mkdir();
-        }
-        
-        if(fileToSaveTweets.exists()) {
-            return;
-        }
-        
+
         try {
             PrintWriter writer = new PrintWriter(path, "UTF-8");
             System.out.println("New File created");
