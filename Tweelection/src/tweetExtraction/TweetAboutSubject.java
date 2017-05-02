@@ -33,7 +33,7 @@ import twitter4j.TwitterException;
  *
  * @author arthur
  */
-public class TweetAboutCandidate {
+public class TweetAboutSubject {
 
     private static final int hourInMilli = 600000;
 
@@ -49,7 +49,7 @@ public class TweetAboutCandidate {
 
     private List<String> period;
 
-    public TweetAboutCandidate(String candidateName, List<String> period) throws ParseException {
+    public TweetAboutSubject(String candidateName, List<String> period) throws ParseException {
         this.candidateName = candidateName;
         this.query = new Query(candidateName);
         this.dates = new ArrayList<String>();
