@@ -21,7 +21,7 @@ import org.knowm.xchart.style.Styler.LegendPosition;
  * @author Iberos
  */
 public class Graph {
-    XYChart[] charts;
+    private XYChart[] charts;
     
     public Graph() {
         this.charts = new XYChart[2];
@@ -43,6 +43,11 @@ public class Graph {
     public void addData(String name, double[] day, double[] rates, double[] number) {
         this.charts[0].addSeries(name, day, rates);
         this.charts[1].addSeries(name, day, number);
+    }
+    
+    public void removeData(String name) {
+        this.charts[0].removeSeries(name);
+        this.charts[1].removeSeries(name);
     }
     
     public void display() {
