@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Timer;
+import tweetAnalyze.tweetAnalyze;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -87,6 +88,15 @@ public class RealTimeTweet {
         int a=0;
         System.out.println(a);
         extractTweets();
+        tweetAnalyze ta = new tweetAnalyze();
+        ta.setRealTime(true);
+        for (String candidate1 : candidate) {
+            ta.addSubject(candidate1);
+        }
+        for(int i = 0; i < texts.length; i++)
+            ta.launchAnalyzeRealTime(texts[i]);
+        ta.refreshGraph();
+                
         while(true){
             Calendar x2=Calendar.getInstance();
             while(x2.getTimeInMillis()-x1.getTimeInMillis()>10000){
@@ -94,7 +104,10 @@ public class RealTimeTweet {
                 System.out.println(a);
                 x1=x2;
                 extractTweets();
+                for(int i = 0; i < texts.length; i++)
+                    ta.launchAnalyzeRealTime(texts[i]);
                 
+                ta.refreshGraph();
             }
         }
     }
