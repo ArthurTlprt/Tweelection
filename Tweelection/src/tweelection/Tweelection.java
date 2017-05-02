@@ -18,7 +18,7 @@ import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
 import sentimentanalysis.BagOfWords;
 import sentimentanalysis.Review;
-import tweetExtraction.TweetAboutCandidate;
+import tweetExtraction.TweetAboutSubject;
 import org.knowm.xchart.XYChart;
 
 /**
@@ -51,52 +51,23 @@ public class Tweelection {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws ParseException, InterruptedException {
-
-        setPeriod("2017-04-23", "2017-04-30");
-
-
-        //on peut faire ça pour chaque candidat maintenant
-
-        TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
-        tweetAboutFillon.setPeriod(period);
-        //tweetAboutFillon.extractThisDay();
-
-        TweetAboutCandidate tweetAboutMelenchon = new TweetAboutCandidate("melenchon");
-        tweetAboutMelenchon.setPeriod(period);
-        //tweetAboutMelenchon.extractThisDay();
-
-        TweetAboutCandidate tweetAboutHamon = new TweetAboutCandidate("hamon");
-        tweetAboutHamon.setPeriod(period);
-        //tweetAboutHamon.extractThisDay();
-
-        TweetAboutCandidate tweetAboutMacron = new TweetAboutCandidate("macron");
-        tweetAboutMacron.setPeriod(period);
-        //tweetAboutMacron.extractThisDay();
-
-        TweetAboutCandidate tweetAboutMLP = new TweetAboutCandidate("MLP");
-        tweetAboutMLP.setPeriod(period);
-        //tweetAboutMLP.extractThisDay();
-        
-        TweetAboutCandidate tweetAboutLassalle = new TweetAboutCandidate("lassalle");
-        tweetAboutLassalle.setPeriod(period);
-        //tweetAboutLassalle.extractThisDay();
-        
-        TweetAboutCandidate tweetAboutDupont_Aignan = new TweetAboutCandidate("dupont-aignan");
-        tweetAboutDupont_Aignan.setPeriod(period);
-        //tweetAboutDupont_Aignan.extractThisDay();
         
         
-        TweetAboutCandidate tweetAboutPoutou = new TweetAboutCandidate("poutou");
-        tweetAboutPoutou.setPeriod(period);
-        //tweetAboutPoutou.extractThisDay();
+        //  Mode sur une periode
+        setPeriod("2017-04-28", "2017-04-30");
+        TweetAboutSubject tweetAboutFillon = new TweetAboutSubject("fillon", period);
+        TweetAboutSubject tweetAboutMelenchon = new TweetAboutSubject("melenchon", period);
+        TweetAboutSubject tweetAboutHamon = new TweetAboutSubject("hamon", period);
+        TweetAboutSubject tweetAboutMacron = new TweetAboutSubject("macron", period);
+        TweetAboutSubject tweetAboutMLP = new TweetAboutSubject("MLP", period);
+        TweetAboutSubject tweetAboutLassalle = new TweetAboutSubject("lassalle", period);
+        TweetAboutSubject tweetAboutDupont_Aignan = new TweetAboutSubject("dupont-aignan", period);
+        TweetAboutSubject tweetAboutPoutou = new TweetAboutSubject("poutou", period);
         
-        TweetAboutCandidate tweetAboutArthaud = new TweetAboutCandidate("arthaud");
-        tweetAboutArthaud.setPeriod(period);
-        //tweetAboutArthaud.extractThisDay();
         
-        
+        // Mode temps réel
 
-
+        
 
         try {
             BagOfWords bog = new BagOfWords();
