@@ -78,7 +78,7 @@ public class TweetAboutCandidate {
                 QueryResult result = null;
                 result = twitter.search(query);
 
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 2; i++) {
                     query = result.nextQuery();
                     result = twitter.search(query);
                     for (Status status : result.getTweets()) {

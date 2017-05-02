@@ -52,7 +52,7 @@ public class Tweelection {
      */
     public static void main(String[] args) throws ParseException, InterruptedException {
 
-        setPeriod("2017-04-22", "2017-04-30");
+        setPeriod("2017-04-23", "2017-04-30");
 
 
         //on peut faire ça pour chaque candidat maintenant
@@ -75,7 +75,26 @@ public class Tweelection {
 
         TweetAboutCandidate tweetAboutMLP = new TweetAboutCandidate("MLP");
         tweetAboutMLP.setPeriod(period);
-        tweetAboutMLP.extractThisDay();
+        //tweetAboutMLP.extractThisDay();
+        
+        TweetAboutCandidate tweetAboutLassalle = new TweetAboutCandidate("lassalle");
+        tweetAboutLassalle.setPeriod(period);
+        //tweetAboutLassalle.extractThisDay();
+        
+        TweetAboutCandidate tweetAboutDupont_Aignan = new TweetAboutCandidate("dupont-aignan");
+        tweetAboutDupont_Aignan.setPeriod(period);
+        //tweetAboutDupont_Aignan.extractThisDay();
+        
+        
+        TweetAboutCandidate tweetAboutPoutou = new TweetAboutCandidate("poutou");
+        tweetAboutPoutou.setPeriod(period);
+        //tweetAboutPoutou.extractThisDay();
+        
+        TweetAboutCandidate tweetAboutArthaud = new TweetAboutCandidate("arthaud");
+        tweetAboutArthaud.setPeriod(period);
+        //tweetAboutArthaud.extractThisDay();
+        
+        
 
 
 
