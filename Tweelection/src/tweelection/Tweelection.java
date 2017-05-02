@@ -52,51 +52,21 @@ public class Tweelection {
      */
     public static void main(String[] args) throws ParseException, InterruptedException {
 
-        setPeriod("2017-04-23", "2017-04-30");
-
-
-        //on peut faire ça pour chaque candidat maintenant
-
-        TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon");
-        tweetAboutFillon.setPeriod(period);
-        //tweetAboutFillon.extractThisDay();
-
-        TweetAboutCandidate tweetAboutMelenchon = new TweetAboutCandidate("melenchon");
-        tweetAboutMelenchon.setPeriod(period);
-        //tweetAboutMelenchon.extractThisDay();
-
-        TweetAboutCandidate tweetAboutHamon = new TweetAboutCandidate("hamon");
-        tweetAboutHamon.setPeriod(period);
-        //tweetAboutHamon.extractThisDay();
-
-        TweetAboutCandidate tweetAboutMacron = new TweetAboutCandidate("macron");
-        tweetAboutMacron.setPeriod(period);
-        //tweetAboutMacron.extractThisDay();
-
-        TweetAboutCandidate tweetAboutMLP = new TweetAboutCandidate("MLP");
-        tweetAboutMLP.setPeriod(period);
-        //tweetAboutMLP.extractThisDay();
+        setPeriod("2017-04-24", "2017-04-30");
         
-        TweetAboutCandidate tweetAboutLassalle = new TweetAboutCandidate("lassalle");
-        tweetAboutLassalle.setPeriod(period);
-        //tweetAboutLassalle.extractThisDay();
+        /*
+        TweetAboutCandidate tweetAboutFillon = new TweetAboutCandidate("fillon", period);
+        TweetAboutCandidate tweetAboutMelenchon = new TweetAboutCandidate("melenchon", period);
+        TweetAboutCandidate tweetAboutHamon = new TweetAboutCandidate("hamon", period);
+        TweetAboutCandidate tweetAboutMacron = new TweetAboutCandidate("macron", period);
+        TweetAboutCandidate tweetAboutMLP = new TweetAboutCandidate("MLP", period);
+        TweetAboutCandidate tweetAboutLassalle = new TweetAboutCandidate("lassalle", period);
+        TweetAboutCandidate tweetAboutDupont_Aignan = new TweetAboutCandidate("dupont-aignan", period);
+        TweetAboutCandidate tweetAboutPoutou = new TweetAboutCandidate("poutou", period);
+        TweetAboutCandidate tweetAboutArthaud = new TweetAboutCandidate("arthaud", period);
+        */
         
-        TweetAboutCandidate tweetAboutDupont_Aignan = new TweetAboutCandidate("dupont-aignan");
-        tweetAboutDupont_Aignan.setPeriod(period);
-        //tweetAboutDupont_Aignan.extractThisDay();
-        
-        
-        TweetAboutCandidate tweetAboutPoutou = new TweetAboutCandidate("poutou");
-        tweetAboutPoutou.setPeriod(period);
-        //tweetAboutPoutou.extractThisDay();
-        
-        TweetAboutCandidate tweetAboutArthaud = new TweetAboutCandidate("arthaud");
-        tweetAboutArthaud.setPeriod(period);
-        //tweetAboutArthaud.extractThisDay();
-        
-        
-
-
+        TweetAboutCandidate tweetAboutPotatoe = new TweetAboutCandidate("potatoe", period);
 
         try {
             BagOfWords bog = new BagOfWords();
