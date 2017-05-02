@@ -12,9 +12,9 @@ package tweetExtraction;
 public class tweetExtraction {
 
     public static void main(String[] args) {
-        TweetAboutSubject tweetAboutFillon = new TweetAboutSubject("fillon");
+        /*TweetAboutSubject tweetAboutFillon = new TweetAboutSubject("fillon");
         tweetAboutFillon.extractTweets(1000);
-        tweetAboutFillon.writeInFile();
+        tweetAboutFillon.writeInFile();*/
     }
 
 }

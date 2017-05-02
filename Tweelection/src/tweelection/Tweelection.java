@@ -20,6 +20,7 @@ import sentimentanalysis.BagOfWords;
 import sentimentanalysis.Review;
 import tweetExtraction.TweetAboutSubject;
 import org.knowm.xchart.XYChart;
+import tweetExtraction.RealTimeTweet;
 
 /**
  *
@@ -54,6 +55,7 @@ public class Tweelection {
         
         
         //  Mode sur une periode
+        /*
         setPeriod("2017-04-28", "2017-04-30");
         TweetAboutSubject tweetAboutFillon = new TweetAboutSubject("fillon", period);
         TweetAboutSubject tweetAboutMelenchon = new TweetAboutSubject("melenchon", period);
@@ -63,10 +65,10 @@ public class Tweelection {
         TweetAboutSubject tweetAboutLassalle = new TweetAboutSubject("lassalle", period);
         TweetAboutSubject tweetAboutDupont_Aignan = new TweetAboutSubject("dupont-aignan", period);
         TweetAboutSubject tweetAboutPoutou = new TweetAboutSubject("poutou", period);
-        
+        */
         
         // Mode temps réel
-
+        RealTimeTweet mySession= new RealTimeTweet("macron","MLP");
         
 
         try {
