@@ -11,7 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sentimentanalysis.BagOfWords;
@@ -29,7 +31,7 @@ public class tweetAnalyze {
     private ArrayList<double[]> numberAnalyzed;
     private List<String> period;
     
-    private int threshold = 10;
+    private int threshold = 5;
     
     private Graph g;
     /*
@@ -46,7 +48,7 @@ public class tweetAnalyze {
         rates = new ArrayList<>();
         numberAnalyzed = new ArrayList<>();
         //period = new List<>();
-        Graph g = new Graph();
+        g = new Graph();
         
         bag = new BagOfWords();
     }
@@ -101,15 +103,19 @@ public class tweetAnalyze {
             bag = new BagOfWords(bag.deserialize());
             
             int subjectIndex = getIndexByName(tweets.get(0));
-            if(rates.get(0).length == 0 || rates.get(0) == null)
+            if(rates.isEmpty())
+                setUp(1);
+            else if(rates.get(0).length == 0)
                 setUp(1);
 
-            int numberOfTweets = 0, classe = 0;
+            int numberOfTweets = 0;
+            double classe = 0;
             int toPlace = getPlaceRealTime(subjectIndex);
  
             for(int i = 1; i < tweets.size(); i++) {
                 Review review = new Review();
                 review.setText(tweets.get(i));
+                review.parseReview();
                 classe += bag.analyzeReview(review);
                 
                 numberOfTweets++;
@@ -120,10 +126,13 @@ public class tweetAnalyze {
             numberAnalyzed.get(subjectIndex)[toPlace] = numberOfTweets;
             
             double[] day = new double[rates.get(0).length];
-            for(int i = 0; i < period.size(); i++)
+            for(int i = 0; i < rates.get(0).length; i++)
                 day[i] = i;
-            g.removeData(namesOfSubjects.get(subjectIndex));
-            g.addData(namesOfSubjects.get(subjectIndex), day, rates.get(subjectIndex), numberAnalyzed.get(subjectIndex));
+            
+            if(rates.get(subjectIndex).length != 1) {
+                g.removeData(namesOfSubjects.get(subjectIndex));
+                g.addData(namesOfSubjects.get(subjectIndex), day, rates.get(subjectIndex), numberAnalyzed.get(subjectIndex));
+            }
             
         } catch(Exception e) {
             System.out.println("Real time analyze failed");
@@ -142,7 +151,6 @@ public class tweetAnalyze {
                 for(int j = 0; j < period.size(); j++) {
                     String period1 = period.get(j);
                     String fileToRead = "tweets_files/" + namesOfSubjects.get(i) + "/" + period1;
-                    //System.out.println(fileToRead + " : ");
                     BufferedReader brReview = new BufferedReader(new FileReader(fileToRead));
 
                     String lineReview;
@@ -182,20 +190,12 @@ public class tweetAnalyze {
     
     public void launchGraph() {
         
-        System.out.println("Graph test : ");
-        System.out.println("Number of guys : " + getNumberOfSubjects());
-        
         double[] day = new double[rates.get(0).length];
         for(int i = 0; i < period.size(); i++)
             day[i] = i;
         
-        for(int i = 0; i < getNumberOfSubjects(); i++) {
-            System.out.println("Guy " + i + ":");
-            System.out.println("rates size : " + rates.get(i).length);
-            System.out.println("numbers size : " + numberAnalyzed.get(i).length);
-            System.out.println("day size : " + day.length);
+        for(int i = 0; i < getNumberOfSubjects(); i++)
             g.addData(namesOfSubjects.get(i), day, rates.get(i), numberAnalyzed.get(i));
-        }
         
         g.display();
     }
@@ -205,6 +205,10 @@ public class tweetAnalyze {
     }
     
     public int getPlaceRealTime(int subjectIndex) {
+        if(rates.get(subjectIndex).length == 1 && rates.get(subjectIndex)[0] == 0.0) {
+            return 0;
+        }
+        
         if(rates.get(subjectIndex).length == threshold) {
             for(int j = 0; j < threshold-1; j++) {
                 rates.get(subjectIndex)[j] = rates.get(subjectIndex)[j+1];
@@ -223,7 +227,17 @@ public class tweetAnalyze {
                 newN[i] = numberAnalyzed.get(subjectIndex)[i];
             }
             
-            return size+1;
+            ListIterator<double[]> itRates = rates.listIterator();
+            ListIterator<double[]> itNumber = numberAnalyzed.listIterator();
+            for(int i = 0; i <= subjectIndex; i++) {
+                itRates.next();
+                itNumber.next();
+            }
+            
+            itRates.set(newR);
+            itNumber.set(newN);
+            
+            return size;
             
         }
         

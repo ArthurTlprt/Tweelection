@@ -36,13 +36,13 @@ public class RealTimeTweet {
     
     
     public RealTimeTweet(String name1, String name2){
-       this.candidate = new String[2];
-       this.candidate[0]=name1;
-       this.candidate[1]=name2;
-       this.query = new Query[2];
-       this.query[0] = new Query(candidate[0]);
-       this.query[1] = new Query(candidate[1]);
-       this.texts = new ArrayList[2];
+        this.candidate = new String[2];
+        this.candidate[0]=name1;
+        this.candidate[1]=name2;
+        this.query = new Query[2];
+        this.query[0] = new Query(candidate[0]);
+        this.query[1] = new Query(candidate[1]);
+        this.texts = new ArrayList[2];
        
 
         cb = new ConfigurationBuilder();
@@ -71,11 +71,11 @@ public class RealTimeTweet {
                     x.add(status.getText());
                     //this.texts[i].add(status.getText());
                     String s=status.getText();
-                    System.out.println(s);
+                    //System.out.println(s);
                     j++;
                 }
                 this.texts[i]=x;
-                System.out.println(j);
+                //System.out.println(j);
             }
         } catch (Exception e) {
             System.err.println("In extractTweet date " + e);
@@ -86,7 +86,7 @@ public class RealTimeTweet {
     public void startExtraction(){
         Calendar x1=Calendar.getInstance();
         int a=0;
-        System.out.println(a);
+        //System.out.println(a);
         extractTweets();
         tweetAnalyze ta = new tweetAnalyze();
         ta.setRealTime(true);
@@ -95,7 +95,7 @@ public class RealTimeTweet {
         }
         for(int i = 0; i < texts.length; i++)
             ta.launchAnalyzeRealTime(texts[i]);
-        ta.refreshGraph();
+        //ta.refreshGraph();
                 
         while(true){
             Calendar x2=Calendar.getInstance();
