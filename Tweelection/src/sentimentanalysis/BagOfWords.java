@@ -31,6 +31,7 @@ public class BagOfWords implements Serializable {
     private ArrayList<String> words;
     private ArrayList<Integer>[] occurencesByClasses;
     private ArrayList<Modifier> modifiers;
+    private String fileName = "bog.tl";
     
     private int numberOfClasses;
     /* Représentation :
@@ -38,6 +39,8 @@ public class BagOfWords implements Serializable {
         mot 1 : x   x   x   x   x   x
         [0].get(index): occurences du mot index en classe 0
     */
+    
+    
     public BagOfWords() {
         numberOfClasses = 6;
         
@@ -92,7 +95,7 @@ public class BagOfWords implements Serializable {
         
     }
     /* Setters */
-    
+    public void setFileName(String fileName) { this.fileName = fileName; }
     
     /* Miscellaneous */
     
@@ -126,6 +129,8 @@ public class BagOfWords implements Serializable {
     /* Computes a word to use it */
     public String computeWord(String word) {
         word = Normalizer.normalize(word, Normalizer.Form.NFD);
+        word = word.replaceAll("(@[A-Za-z_]+)", "");
+        word = word.replaceAll("(https?:\\/\\/)?t.co(\\/[A-Za-z\\d]+)", "");
         word = word.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         word = word.replaceAll("[^a-zA-Z ]", "").toLowerCase();
         word = word.replaceAll(" ", "");
@@ -236,30 +241,30 @@ public class BagOfWords implements Serializable {
     /* Analyzes a sentence to get it's subjectivity */
     public double analyzeReview(Review review) {
         float classe = 0;
-        float previousClasse =-1;
+        double previousClasse =-1;
         int numberOfWords = 0;
         int multiplier = 1;
         boolean known = false;
         
-        
         for(int i = 0; i < review.getSize(); i++) {
-            System.out.println(i + " : " + review.getWordByIndex(i));
             int isModifier = isModifier(review.getWordByIndex(i));
-            if(isModifier != 0) {
-                multiplier = modifiers.get(isModifier).getMultiplier();
-                classe -= previousClasse;
-                float toAdd = (float) (multiplier*previousClasse);
-                if(toAdd < 0)
-                    toAdd = 0;
-                if(toAdd > 5)
-                    toAdd = 5;
-                classe += toAdd;
-            //i++;
-                //break;
-            } else {
+            if(isModifier != 0)
+                multiplier *= modifiers.get(isModifier).getMultiplier();    
+            else {
                 double probableWordClasse = getWordClasse(review.getWordByIndex(i));
+                
+                if(multiplier != 1) {
+                    classe -= previousClasse;
+                    float toAdd = (float) (multiplier*previousClasse);
+                    if(toAdd < 0)
+                        toAdd = 0;
+                    if(toAdd > 5)
+                        toAdd = 5;
+                    classe += toAdd;
+                }
+                
                 if(probableWordClasse != -1) {
-                    float toAdd = (float) (multiplier*probableWordClasse);
+                    double toAdd = (multiplier*probableWordClasse);
                     if(toAdd < 0)
                         toAdd = 0;
                     if(toAdd > 5)
@@ -274,21 +279,33 @@ public class BagOfWords implements Serializable {
             }
         }
         
+        if(multiplier != 1) {
+            classe -= previousClasse;
+            float toAdd = (float) (multiplier*previousClasse);
+            if(toAdd < 0)
+                toAdd = 0;
+            if(toAdd > 5)
+                toAdd = 5;
+            classe += toAdd;
+        }
+        
+        classe /= numberOfWords;
+        
         if(!known)
             return 3;
         
-        if(classe == 0)
-            return 0;
+        double threshold = 0.1;
+        if(classe <= threshold)
+            classe = 0;
         
         review.setClasse(round(classe));
-        review.parseReview();
         for(int i = 0; i < review.getSize(); i++) {
             if(isModifier(review.getWordByIndex(i)) == 0) {
                 addWord(review.getWordByIndex(i), review.getClasse());
             }
         }
                 
-        return classe/numberOfWords;
+        return classe;
     }
     
     
@@ -347,7 +364,7 @@ public class BagOfWords implements Serializable {
     public void serialize() {
         try {
             FileOutputStream file;
-            file = new FileOutputStream("bog.tl");
+            file = new FileOutputStream(fileName);
             
             ObjectOutputStream obj = new ObjectOutputStream(file);
             obj.writeObject(this);
@@ -364,7 +381,8 @@ public class BagOfWords implements Serializable {
         BagOfWords bog = null;
         try {
            
-           FileInputStream fileIn = new FileInputStream("bog.tl");
+           //FileInputStream fileIn = new FileInputStream("bog.tl"); 
+           FileInputStream fileIn = new FileInputStream(fileName);
            ObjectInputStream in = new ObjectInputStream(fileIn);
            
            bog = (BagOfWords) in.readObject();

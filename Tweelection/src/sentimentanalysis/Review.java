@@ -63,15 +63,11 @@ public class Review {
             space = text.indexOf(" ");
             if(space != -1) {
                 parsedText.add(text.substring(0, space));
-                //System.out.println(parsedText.get(parsedText.size()-1));
-                //System.out.print("+");
                 text = text.substring(space+1);
             } else {
                 parsedText.add(text);
             }
 
-        } while(space != -1);
-        
-        System.out.println();            
+        } while(space != -1);           
     }
 }

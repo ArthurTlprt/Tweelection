@@ -110,38 +110,7 @@ public class TweetAboutSubject {
         return true;
     }
 
-    public void extractTweetsFromNowToDate(Calendar date) {
-        Calendar dateStart = new GregorianCalendar();
-
-        int i = 1;
-        try {
-            query.setCount(100);
-            QueryResult result = twitter.search(query);
-
-            Calendar currentDate = Calendar.getInstance();
-            do {
-                query = result.nextQuery();
-                result = twitter.search(query);
-                for (Status status : result.getTweets()) {
-                    texts.add(status.getText());
-
-                    currentDate.setTime(status.getCreatedAt());
-
-                    if (dateStart.getTimeInMillis() - currentDate.getTimeInMillis() > i * hourInMilli) {
-                        System.out.println("Extraction arrêtée à " + currentDate);
-                        writeInFile(currentDate.toString());
-                        this.texts.clear();
-                        dateStart.setTime(currentDate.getTime());
-                        i++;
-                    }
-
-                }
-            } while (true);
-
-        } catch (Exception e) {
-            System.err.println("In extractTweet date " + e);
-        }
-    }
+    
 
     private void writeInFile(String date) {
         String path = "tweets_files/" + candidateName + "/" + date;
