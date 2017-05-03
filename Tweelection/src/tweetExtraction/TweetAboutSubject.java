@@ -6,13 +6,9 @@
 package tweetExtraction;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import twitter4j.Query;
@@ -21,12 +17,8 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
 import twitter4j.TwitterException;
 
 /**
@@ -157,9 +149,9 @@ public class TweetAboutSubject {
         try {
             PrintWriter writer = new PrintWriter(path, "UTF-8");
             System.out.println("New File created");
-            for (String text : texts) {
+            texts.forEach((text) -> {
                 writer.println(text);
-            }
+            });
 
             writer.close();
 
