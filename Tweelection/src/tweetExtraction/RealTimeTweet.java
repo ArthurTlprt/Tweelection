@@ -24,7 +24,7 @@ import twitter4j.conf.ConfigurationBuilder;
  * @author arthur
  */
 public class RealTimeTweet {
-    
+
     private String[] candidate;
     private Query[] query;
     private ArrayList<String>[] texts;
@@ -32,24 +32,25 @@ public class RealTimeTweet {
     private final ConfigurationBuilder cb;
     private final TwitterFactory tf;
     private final Twitter twitter;
-    
+
     private long interval;
-    
-    
-    
-    public RealTimeTweet(ArrayList<String> names){
+
+    private Calendar momentBegin;
+
+    public RealTimeTweet(ArrayList<String> names) {
         int size = names.size();
-        
+
         this.candidate = new String[size];
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++) {
             this.candidate[i] = names.get(i);
+        }
 
         this.query = new Query[size];
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++) {
             this.query[i] = new Query(candidate[i]);
+        }
 
         this.texts = new ArrayList[size];
-       
 
         cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
@@ -60,42 +61,48 @@ public class RealTimeTweet {
         tf = new TwitterFactory(cb.build());
         twitter = tf.getInstance();
         //extractTweets();
-        
+
         // fixe l'interval pour limiter le nombre de requete (eviter erreur api)
-        interval = 15 * 60 * candidate.length / 180;
-        
+        interval = 15 * 60 * candidate.length * 1000 / 180;
+
         startExtraction();
     }
-    
+
     private void extractTweets() {
         try {
-            for(int i = 0; i < candidate.length; i++){
-                this.query[i]=new Query(candidate[i]);
+            for (int i = 0; i < candidate.length; i++) {
+                this.query[i] = new Query(candidate[i]);
                 this.query[i].setCount(100);
                 QueryResult result = null;
                 result = twitter.search(this.query[i]);
-                
+
                 int j = 0;
                 ArrayList<String> x = new ArrayList<String>();
                 x.add(this.candidate[i]);
+                int b = 0;
                 for (Status status : result.getTweets()) {
-                    x.add(status.getText());
-                    //this.texts[i].add(status.getText());
-                    String s = status.getText();
-                    j++;
+                    if (status.getCreatedAt().getTime() < momentBegin.getTimeInMillis()) {
+                        if (momentBegin.getTimeInMillis() - (interval + 10000) > status.getCreatedAt().getTime()) {
+                            b++;
+                            x.add(status.getText());
+                            //this.texts[i].add(status.getText());
+                            String s = status.getText();
+                            j++;
+                        }
+                    }
                 }
-                this.texts[i]=x;
+                System.out.println(b);
+                this.texts[i] = x;
                 //System.out.println(j);
             }
         } catch (Exception e) {
             System.err.println("In extractTweet date " + e);
         }
     }
-    
-    
-    public void startExtraction(){
-        Calendar x1=Calendar.getInstance();
-        int a=0;
+
+    public void startExtraction() {
+        momentBegin = Calendar.getInstance();
+        int a = 0;
         //System.out.println(a);
         extractTweets();
         tweetAnalyze ta = new tweetAnalyze();
@@ -103,26 +110,25 @@ public class RealTimeTweet {
         for (String candidate1 : candidate) {
             ta.addSubject(candidate1);
         }
-        for(int i = 0; i < texts.length; i++)
+        for (int i = 0; i < texts.length; i++) {
             ta.launchAnalyzeRealTime(texts[i]);
+        }
         ta.displayGraph();
-                
-        while(true){
-            Calendar x2=Calendar.getInstance();
-            while(x2.getTimeInMillis()-x1.getTimeInMillis()> interval){
+
+        while (true) {
+            Calendar x2 = Calendar.getInstance();
+            while (x2.getTimeInMillis() - momentBegin.getTimeInMillis() > interval) {
                 a++;
                 System.out.println(a);
-                x1=x2;
+                momentBegin = x2;
                 extractTweets();
-                for(int i = 0; i < texts.length; i++)
+                for (int i = 0; i < texts.length; i++) {
                     ta.launchAnalyzeRealTime(texts[i]);
-                
+                }
+
                 ta.refreshGraph();
                 //ta.save();
             }
         }
     }
 }
-
-
-

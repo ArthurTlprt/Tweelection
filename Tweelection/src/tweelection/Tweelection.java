@@ -74,8 +74,8 @@ public class Tweelection {
         //names.add("gaufre");
         //names.add("levrette");
         //names.add("missionaire");
-        names2.add("pepsi");
-        names2.add("coca");
+        names2.add("macron");
+        names2.add("marine");
         //names.add("pain chocolat");
         //names.add("chocolatine");
         //names.add("yaourt fraise");
