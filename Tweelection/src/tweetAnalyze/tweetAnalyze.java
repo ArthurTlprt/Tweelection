@@ -31,7 +31,7 @@ public class tweetAnalyze {
     private ArrayList<double[]> numberAnalyzed;
     private List<String> period;
     
-    private int threshold = 5;
+    private int threshold = 60;
     
     private Graph g;
     /*
@@ -200,8 +200,12 @@ public class tweetAnalyze {
         g.display();
     }
     
-    public void refreshGraph() {
+    public void displayGraph() {
         g.display();
+    }
+    
+    public void refreshGraph() {
+        g.refresh();
     }
     
     public int getPlaceRealTime(int subjectIndex) {
@@ -241,5 +245,9 @@ public class tweetAnalyze {
             
         }
         
+    }
+    
+    public void save() {
+        bag.serialize();
     }
 }

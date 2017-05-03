@@ -22,6 +22,7 @@ import org.knowm.xchart.style.Styler.LegendPosition;
  */
 public class Graph {
     private XYChart[] charts;
+    private JFrame frame;
     
     public Graph() {
         this.charts = new XYChart[2];
@@ -51,7 +52,7 @@ public class Graph {
     }
     
     public void display() {
-        JFrame frame = new JFrame("Tweelection");
+        frame = new JFrame("Tweelection");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         
         frame.setLayout(new GridLayout(2, 1, 0, 0));
@@ -61,5 +62,15 @@ public class Graph {
         
         frame.setSize(800, 600);
         frame.setVisible(true);
+    }
+    
+    public void refresh() {
+        frame.getContentPane().removeAll();
+        
+        frame.setLayout(new GridLayout(2, 1, 0, 0));
+        
+        frame.add(new XChartPanel(this.charts[0]));
+        frame.add(new XChartPanel(this.charts[1]));
+        frame.validate();
     }
 }
