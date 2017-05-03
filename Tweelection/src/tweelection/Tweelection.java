@@ -20,6 +20,7 @@ import sentimentanalysis.BagOfWords;
 import sentimentanalysis.Review;
 import tweetExtraction.TweetAboutSubject;
 import org.knowm.xchart.XYChart;
+import tweetAnalyze.tweetAnalyze;
 import tweetExtraction.RealTimeTweet;
 
 /**
@@ -68,18 +69,47 @@ public class Tweelection {
         */
         
         // Mode temps réel
-        RealTimeTweet mySession= new RealTimeTweet("macron","MLP");
+        ArrayList<String> names1 = new ArrayList<>(), names2 = new ArrayList<>();
+        //names.add("crepe");
+        //names.add("gaufre");
+        //names.add("levrette");
+        //names.add("missionaire");
+        names2.add("pepsi");
+        names2.add("coca");
+        //names.add("pain chocolat");
+        //names.add("chocolatine");
+        //names.add("yaourt fraise");
+        //names.add("yaourt peche");
+        names1.add("slip");
+        names1.add("calecon");
+        RealTimeTweet mySession= new RealTimeTweet(names2);
         
+        
+        // Mode via les fichiers
+        /*tweetAnalyze ta = new tweetAnalyze();
+        ta.setRealTime(false);
+        setPeriod("2017-04-23", "2017-04-30");
+        ta.setPeriod(period);
+
+        ta.addSubject("macron");
+        ta.addSubject("MLP");
+        
+        ta.launchAnalyze();
+        ta.launchGraph();*/
 
         try {
-            BagOfWords bog = new BagOfWords();
-            bog = new BagOfWords(bog.deserialize());
-            //bog.learnReviews("rates.txt", "reviews.txt");
-            //bog.learnReviews("rates2.txt", "reviews2.txt");
+            /*BagOfWords bog = new BagOfWords();
+            //bog = new BagOfWords(bog.deserialize());
+            bog.learnReviews("rates.txt", "reviews.txt");
+            bog.learnReviews("rates2.txt", "reviews2.txt");
+            bog.learnReviews("rates3.txt", "reviews3.txt");
+            bog.addModifier("pas", -1);
+            bog.addModifier("très", 2);
+            bog.addModifier("trop", 2);*/
             //bog = new BagOfWords(bog.deserialize());
             //bog.addModifier("tres", 2);
             //bog.addModifier("pas", -1);
-            System.out.println(bog.evaluateAccuracy("rates2.txt", "reviews2.txt"));
+            //System.out.println(bog.evaluateAccuracy("rates2.txt", "reviews2.txt"));*/
             //bog.print(20);
             //bog.load("bog.txt");
             //BagOfWords bog2 = new BagOfWords(bog);
