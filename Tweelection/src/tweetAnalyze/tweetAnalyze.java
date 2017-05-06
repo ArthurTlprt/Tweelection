@@ -92,7 +92,6 @@ public class tweetAnalyze {
     public void launchAnalyze() {
         if(realTime)
             System.out.println("Real time");
-            //launchAnalyzeRealTime();
         else
             launchAnalyzeFiles();
     }
@@ -150,7 +149,10 @@ public class tweetAnalyze {
             for(int i = 0; i < getNumberOfSubjects(); i++) {
                 for(int j = 0; j < period.size(); j++) {
                     String period1 = period.get(j);
-                    String fileToRead = "tweets_files/" + namesOfSubjects.get(i) + "/" + period1;
+                    String name = namesOfSubjects.get(i);
+                    name = name.replaceAll(" ", "\\ ");
+                    
+                    String fileToRead = "tweets_files/" + name + "/" + period1;
                     BufferedReader brReview = new BufferedReader(new FileReader(fileToRead));
 
                     String lineReview;
@@ -162,7 +164,7 @@ public class tweetAnalyze {
                         Review review = new Review();
                         review.setText(lineReview);
                         review.parseReview();
-
+                        
                         classe += bag.analyzeReview(review);
 
                         numberOfReviews++;
@@ -172,7 +174,6 @@ public class tweetAnalyze {
                     rates.get(i)[j] = classe;
                     numberAnalyzed.get(i)[j] = numberOfReviews;
                 }
-                
             }
             
             
@@ -249,5 +250,6 @@ public class tweetAnalyze {
     
     public void save() {
         bag.serialize();
+        System.out.println("Done !");
     }
 }

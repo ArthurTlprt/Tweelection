@@ -5,7 +5,9 @@
  */
 package sentimentanalysis;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  *
@@ -68,6 +70,7 @@ public class Review {
                 parsedText.add(text);
             }
 
-        } while(space != -1);           
+        } while(space != -1);         
+
     }
 }

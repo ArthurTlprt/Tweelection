@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
+import java.nio.charset.Charset;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -134,6 +135,9 @@ public class BagOfWords implements Serializable {
         word = word.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         word = word.replaceAll("[^a-zA-Z ]", "").toLowerCase();
         word = word.replaceAll(" ", "");
+        
+        //Charset charset = Charset.forName("UTF-8");
+        //word = charset.decode(charset.encode(word)).toString();
         return word;
     }
     
@@ -253,7 +257,7 @@ public class BagOfWords implements Serializable {
             else {
                 double probableWordClasse = getWordClasse(review.getWordByIndex(i));
                 
-                if(multiplier != 1) {
+                if(multiplier != 1 && previousClasse != -1) {
                     classe -= previousClasse;
                     float toAdd = (float) (multiplier*previousClasse);
                     if(toAdd < 0)
