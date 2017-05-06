@@ -51,15 +51,17 @@ public class Tweelection {
 
     /**
      * @param args the command line arguments
+     * @throws java.text.ParseException
+     * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws ParseException, InterruptedException {
         
         // Mode temps réel
-        ArrayList<String> names = new ArrayList<>();
+        /*ArrayList<String> names = new ArrayList<>();
         names.add("macron");
         names.add("MLP");
-        //RealTimeTweet mySession= new RealTimeTweet(names);
-        
+        RealTimeTweet mySession= new RealTimeTweet(names);
+        //*/
         
         // Mode via les fichiers sur une période
         setPeriod("2017-04-30", "2017-05-06");
