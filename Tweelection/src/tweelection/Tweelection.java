@@ -54,83 +54,32 @@ public class Tweelection {
      */
     public static void main(String[] args) throws ParseException, InterruptedException {
         
-        
-        //  Mode sur une periode
-        /*
-        setPeriod("2017-04-28", "2017-04-30");
-        TweetAboutSubject tweetAboutFillon = new TweetAboutSubject("fillon", period);
-        TweetAboutSubject tweetAboutMelenchon = new TweetAboutSubject("melenchon", period);
-        TweetAboutSubject tweetAboutHamon = new TweetAboutSubject("hamon", period);
-        TweetAboutSubject tweetAboutMacron = new TweetAboutSubject("macron", period);
-        TweetAboutSubject tweetAboutMLP = new TweetAboutSubject("MLP", period);
-        TweetAboutSubject tweetAboutLassalle = new TweetAboutSubject("lassalle", period);
-        TweetAboutSubject tweetAboutDupont_Aignan = new TweetAboutSubject("dupont-aignan", period);
-        TweetAboutSubject tweetAboutPoutou = new TweetAboutSubject("poutou", period);
-        */
-        
         // Mode temps réel
-        ArrayList<String> names1 = new ArrayList<>(), names2 = new ArrayList<>();
-        //names.add("crepe");
-        //names.add("gaufre");
-        //names.add("levrette");
-        //names.add("missionaire");
-        names2.add("muesli");
-        names2.add("bite");
-        //names.add("pain chocolat");
-        //names.add("chocolatine");
-        //names.add("yaourt fraise");
-        //names.add("yaourt peche");
-        names1.add("slip");
-        names1.add("calecon");
-        RealTimeTweet mySession= new RealTimeTweet(names2);
+        ArrayList<String> names = new ArrayList<>();
+        names.add("macron");
+        names.add("MLP");
+        //RealTimeTweet mySession= new RealTimeTweet(names);
         
         
-        // Mode via les fichiers
-        /*tweetAnalyze ta = new tweetAnalyze();
+        // Mode via les fichiers sur une période
+        setPeriod("2017-04-30", "2017-05-06");
+        String subject1 = "MLP", subject2 = "macron";
+        TweetAboutSubject tweetAboutChoco = new TweetAboutSubject(subject1, period);
+        TweetAboutSubject tweetAboutPain = new TweetAboutSubject(subject2, period);
+        
+        
+        tweetAnalyze ta = new tweetAnalyze();
         ta.setRealTime(false);
-        setPeriod("2017-04-23", "2017-04-30");
         ta.setPeriod(period);
 
-        ta.addSubject("macron");
-        ta.addSubject("MLP");
+        ta.addSubject(subject1);
+        ta.addSubject(subject2);
         
         ta.launchAnalyze();
-        ta.launchGraph();*/
-
-        try {
-            /*BagOfWords bog = new BagOfWords();
-            //bog = new BagOfWords(bog.deserialize());
-            bog.learnReviews("rates.txt", "reviews.txt");
-            bog.learnReviews("rates2.txt", "reviews2.txt");
-            bog.learnReviews("rates3.txt", "reviews3.txt");
-            bog.addModifier("pas", -1);
-            bog.addModifier("très", 2);
-            bog.addModifier("trop", 2);*/
-            //bog = new BagOfWords(bog.deserialize());
-            //bog.addModifier("tres", 2);
-            //bog.addModifier("pas", -1);
-            //System.out.println(bog.evaluateAccuracy("rates2.txt", "reviews2.txt"));*/
-            //bog.print(20);
-            //bog.load("bog.txt");
-            //BagOfWords bog2 = new BagOfWords(bog);
-            //bog.print(10);
-            //bog2.print(10);
-            //Review review = new Review();
-            //review.setText("Parce que les étrangers coûtent moins cher que ma femme, je continuerai à voler en toute impunité");
-            //review.parseReview();
-            //System.out.println(bog.analyzeReview(review));
-            //System.out.println(bog.getWordClasse("tres"));
-            /*bog.addWord("Bonjour", 3);
-            bog.addWord("nul", 0);
-            bog.addWord("parfait", 5);
-            for(int i = 0; i < 125; i++)
-                bog.addWord("capitalisme", 0);
-            bog.print(5);*/
-            //bog.serialize();
-        } catch (Exception e) {
-            System.out.println("Ton père le chien");
-            //System.out.println(e.getMessage());
-        }
+        ta.launchGraph();
+        
+        ta.save();
+        //*/
 
     }
 
