@@ -53,7 +53,7 @@ public class Graph {
     
     public void display() {
         frame = new JFrame("Tweelection");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         frame.setLayout(new GridLayout(2, 1, 0, 0));
         

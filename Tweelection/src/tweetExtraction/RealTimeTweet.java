@@ -37,6 +37,8 @@ public class RealTimeTweet {
 
     private Calendar momentBegin;
 
+    private tweetAnalyze ta;
+    
     public RealTimeTweet(ArrayList<String> names) {
         int size = names.size();
 
@@ -65,10 +67,20 @@ public class RealTimeTweet {
         // fixe l'interval pour limiter le nombre de requete (eviter erreur api)
         interval = 15 * 60 * candidate.length * 1000 / 180;
 
-        startExtraction();
+        //startExtraction();
     }
 
-    private void extractTweets() {
+    public void setTweetAnalyze(tweetAnalyze ta) { this.ta = ta; }
+    public void setMomentBegin() { momentBegin = Calendar.getInstance(); }
+    public void setMomentBegin(Calendar x) { momentBegin = x; }
+    
+    public Calendar getMomentBegin() { return momentBegin; }
+    public String[] getCandidates() { return candidate; }
+    public ArrayList<String>[] getTexts() { return texts; }
+    public ArrayList<String> getTexts(int index) { return texts[index]; }
+    public long getInterval() { return interval; }
+    
+    public void extractTweets() {
         try {
             for (int i = 0; i < candidate.length; i++) {
                 this.query[i] = new Query(candidate[i]);
@@ -105,7 +117,7 @@ public class RealTimeTweet {
         int a = 0;
         //System.out.println(a);
         extractTweets();
-        tweetAnalyze ta = new tweetAnalyze();
+        //tweetAnalyze ta = new tweetAnalyze();
         ta.setRealTime(true);
         for (String candidate1 : candidate) {
             ta.addSubject(candidate1);

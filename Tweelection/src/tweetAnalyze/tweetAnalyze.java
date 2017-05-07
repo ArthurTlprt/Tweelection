@@ -5,25 +5,39 @@
  */
 package tweetAnalyze;
 
+import controller.FormControler;
+import gui.ChoiceWindow;
 import gui.Graph;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import sentimentanalysis.BagOfWords;
 import sentimentanalysis.Review;
+import tweetExtraction.RealTimeTweet;
+import tweetExtraction.TweetAboutSubject;
 
 /**
  *
  * @author gerald
  */
-public class tweetAnalyze {
+public class tweetAnalyze implements ActionListener {
     private boolean realTime;
     // private int numberOfSubjects = 0;
     private ArrayList<String> namesOfSubjects;
@@ -43,6 +57,9 @@ public class tweetAnalyze {
     private String bogFileName = "bog.tl";
     private BagOfWords bag;
     
+    private ChoiceWindow win;
+    private FormControler control;
+    
     public tweetAnalyze() {
         namesOfSubjects = new ArrayList<>();
         rates = new ArrayList<>();
@@ -51,6 +68,10 @@ public class tweetAnalyze {
         g = new Graph();
         
         bag = new BagOfWords();
+        
+        control = new FormControler();
+        win = new ChoiceWindow();
+        win.addListener(this);
     }
     
     /* My set of setters */
@@ -131,7 +152,8 @@ public class tweetAnalyze {
             if(rates.get(subjectIndex).length != 1) {
                 g.removeData(namesOfSubjects.get(subjectIndex));
                 g.addData(namesOfSubjects.get(subjectIndex), day, rates.get(subjectIndex), numberAnalyzed.get(subjectIndex));
-            }
+            } else 
+                g.addData(namesOfSubjects.get(subjectIndex), day, rates.get(subjectIndex), numberAnalyzed.get(subjectIndex));
             
         } catch(Exception e) {
             System.out.println("Real time analyze failed");
@@ -251,5 +273,89 @@ public class tweetAnalyze {
     public void save() {
         bag.serialize();
         System.out.println("Done !");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        String start = win.getStart();
+        String end = win.getEnd();
+        String sub1 = win.getSubject1();
+        String sub2 = win.getSubject2();
+        
+        if(win.getMethod() == 0) {
+            // Mode temps réel
+            setRealTime(true);
+            //win.setVisible(false);
+            //win.dispose();
+            addSubject(sub1);
+            addSubject(sub2);
+            RealTimeTweet mySession = new RealTimeTweet(namesOfSubjects);
+            mySession.setMomentBegin();
+            int a = 0;
+            mySession.setTweetAnalyze(this);
+            mySession.extractTweets();
+            
+            for (int i = 0; i < mySession.getTexts().length; i++) {
+                launchAnalyzeRealTime(mySession.getTexts(i));
+            }
+            g.display();
+            
+            while (true) {
+                Calendar x2 = Calendar.getInstance();
+                while (x2.getTimeInMillis() - mySession.getMomentBegin().getTimeInMillis() > mySession.getInterval()) {
+                    //a++;
+                    //System.out.println(a);
+                    mySession.setMomentBegin(x2);
+                    mySession.extractTweets();
+                    for (int i = 0; i < mySession.getTexts().length; i++) {
+                        launchAnalyzeRealTime(mySession.getTexts(i));
+                    }
+
+                    refreshGraph();
+                }
+            }
+            //*/
+        }
+        
+        if(win.getMethod() == 1 && control.allIsGood(start, end, sub1, sub2)) {
+            try {
+                win.setVisible(false);
+                win.dispose();
+                setPeriod(start, end);
+                TweetAboutSubject tweetAbout1 = new TweetAboutSubject(sub1, period);
+                TweetAboutSubject tweetAbout2 = new TweetAboutSubject(sub2, period);
+                
+                setRealTime(false);
+                
+                addSubject(sub1);
+                addSubject(sub2);
+                
+                launchAnalyze();
+                launchGraph();
+                
+                save();
+                //*/
+            } catch (ParseException ex) {
+                Logger.getLogger(tweetAnalyze.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    private void setPeriod(String str_startDate, String str_endDate) throws ParseException {
+        period = new ArrayList<String>();
+
+        DateFormat formatter;
+
+        formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = (Date) formatter.parse(str_startDate);
+        Date endDate = (Date) formatter.parse(str_endDate);
+        long interval = 24 * 1000 * 60 * 60; // 1 hour in millis
+        long endTime = endDate.getTime(); // create your endtime here, possibly using Calendar or Date
+        long curTime = startDate.getTime();
+        while (curTime <= endTime) {
+            period.add(formatter.format(curTime));
+            curTime += interval;
+        }
+
     }
 }

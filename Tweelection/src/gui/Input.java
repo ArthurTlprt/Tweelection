@@ -14,13 +14,22 @@ import javax.swing.JTextField;
  *
  * @author arthur
  */
-public class Input extends JPanel{
+public class Input extends JPanel {
+    
+    private JLabel label;
+    private JTextField text;
     
     public Input(String label) {
         super();
         this.setLayout(new GridLayout(1, 2));
-        this.add(new JLabel(label));
-        this.add(new JTextField());
+        
+        this.label = new JLabel(label);
+        this.text = new JTextField();
+        
+        this.add(this.label);
+        this.add(text);
     }
+    
+    public String getText() { return text.getText(); }
     
 }
