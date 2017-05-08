@@ -282,11 +282,6 @@ public class tweetAnalyze implements ActionListener {
         for(int i = 0; i < win.getNumberOfSubjects(); i++) {
             addSubject(win.getSubject(i));
         }
-        
-        if(win.getMethod() == 1)
-            
-        
-        if(win.getMethod() == 0)
             
         
         if(win.getMethod() == 0) {

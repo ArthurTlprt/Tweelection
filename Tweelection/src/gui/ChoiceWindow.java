@@ -5,6 +5,7 @@
  */
 package gui;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
