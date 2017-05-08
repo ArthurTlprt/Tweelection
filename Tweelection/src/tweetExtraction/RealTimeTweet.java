@@ -78,6 +78,7 @@ public class RealTimeTweet {
     public String[] getCandidates() { return candidate; }
     public ArrayList<String>[] getTexts() { return texts; }
     public ArrayList<String> getTexts(int index) { return texts[index]; }
+    public int getLength() { return texts.length; }
     public long getInterval() { return interval; }
     
     public void extractTweets() {
@@ -89,7 +90,7 @@ public class RealTimeTweet {
                 result = twitter.search(this.query[i]);
 
                 int j = 0;
-                ArrayList<String> x = new ArrayList<String>();
+                ArrayList<String> x = new ArrayList<>();
                 x.add(this.candidate[i]);
                 int b = 0;
                 for (Status status : result.getTweets()) {
@@ -97,15 +98,13 @@ public class RealTimeTweet {
                         if (momentBegin.getTimeInMillis() - (interval + 10000) > status.getCreatedAt().getTime()) {
                             b++;
                             x.add(status.getText());
-                            //this.texts[i].add(status.getText());
                             String s = status.getText();
                             j++;
                         }
                     }
                 }
-                System.out.println(b);
+                //System.out.println(b);
                 this.texts[i] = x;
-                //System.out.println(j);
             }
         } catch (Exception e) {
             System.err.println("In extractTweet date " + e);
@@ -139,7 +138,6 @@ public class RealTimeTweet {
                 }
 
                 ta.refreshGraph();
-                //ta.save();
             }
         }
     }

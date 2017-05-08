@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import static java.lang.Thread.sleep;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -223,13 +224,8 @@ public class tweetAnalyze implements ActionListener {
         g.display();
     }
     
-    public void displayGraph() {
-        g.display();
-    }
-    
-    public void refreshGraph() {
-        g.refresh();
-    }
+    public void displayGraph() { g.display(); }
+    public void refreshGraph() { g.refresh(); }
     
     public int getPlaceRealTime(int subjectIndex) {
         if(rates.get(subjectIndex).length == 1 && rates.get(subjectIndex)[0] == 0.0) {
@@ -277,64 +273,83 @@ public class tweetAnalyze implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
+        if(win.getMethod() == -1)
+            return;
+        
         String start = win.getStart();
         String end = win.getEnd();
-        String sub1 = win.getSubject1();
-        String sub2 = win.getSubject2();
+        
+        for(int i = 0; i < win.getNumberOfSubjects(); i++) {
+            addSubject(win.getSubject(i));
+        }
+        
+        if(win.getMethod() == 1)
+            
+        
+        if(win.getMethod() == 0)
+            
         
         if(win.getMethod() == 0) {
-            // Mode temps réel
+            if(!control.areSubjectsGood(namesOfSubjects))
+                return;
             setRealTime(true);
-            //win.setVisible(false);
-            //win.dispose();
-            addSubject(sub1);
-            addSubject(sub2);
+            win.setVisible(false);
+            win.dispose();
+            
             RealTimeTweet mySession = new RealTimeTweet(namesOfSubjects);
             mySession.setMomentBegin();
-            int a = 0;
-            mySession.setTweetAnalyze(this);
             mySession.extractTweets();
-            
+
             for (int i = 0; i < mySession.getTexts().length; i++) {
                 launchAnalyzeRealTime(mySession.getTexts(i));
             }
             g.display();
-            
-            while (true) {
-                Calendar x2 = Calendar.getInstance();
-                while (x2.getTimeInMillis() - mySession.getMomentBegin().getTimeInMillis() > mySession.getInterval()) {
-                    //a++;
-                    //System.out.println(a);
-                    mySession.setMomentBegin(x2);
-                    mySession.extractTweets();
-                    for (int i = 0; i < mySession.getTexts().length; i++) {
-                        launchAnalyzeRealTime(mySession.getTexts(i));
-                    }
 
-                    refreshGraph();
+            Thread t;
+            t = new Thread() {
+                @Override
+                public void run() {
+                    int a = 0;
+
+                    while(true) {
+                        Calendar x2 = Calendar.getInstance();
+                        while (x2.getTimeInMillis() - mySession.getMomentBegin().getTimeInMillis() > mySession.getInterval()) {
+                            a++;
+                            System.out.println(a);
+                            mySession.setMomentBegin(x2);
+                            mySession.extractTweets();
+                            for (int i = 0; i < mySession.getLength(); i++) {
+                                launchAnalyzeRealTime(mySession.getTexts(i));
+                            }
+                            g.refresh();
+                        }
+                    }
                 }
-            }
-            //*/
+            };
+            
+            t.start();
+            
         }
         
-        if(win.getMethod() == 1 && control.allIsGood(start, end, sub1, sub2)) {
+        if(win.getMethod() == 1) {
+            if(!control.allIsGood(start, end, namesOfSubjects))
+                return;
             try {
                 win.setVisible(false);
                 win.dispose();
                 setPeriod(start, end);
-                TweetAboutSubject tweetAbout1 = new TweetAboutSubject(sub1, period);
-                TweetAboutSubject tweetAbout2 = new TweetAboutSubject(sub2, period);
+                
+                for(int i = 0; i < win.getNumberOfSubjects(); i++) {
+                    TweetAboutSubject tweetAboutI = new TweetAboutSubject(win.getSubject(i), period);
+                }
                 
                 setRealTime(false);
                 
-                addSubject(sub1);
-                addSubject(sub2);
                 
                 launchAnalyze();
                 launchGraph();
                 
                 save();
-                //*/
             } catch (ParseException ex) {
                 Logger.getLogger(tweetAnalyze.class.getName()).log(Level.SEVERE, null, ex);
             }

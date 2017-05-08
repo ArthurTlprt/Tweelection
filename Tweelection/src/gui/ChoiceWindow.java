@@ -7,6 +7,7 @@ package gui;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -43,8 +44,9 @@ public class ChoiceWindow extends JFrame {
         submit.addActionListener(o);
     }
     
-    public String getSubject1() { return sf.getSubject1(); }
-    public String getSubject2() { return sf.getSubject2(); }
+    public String getSubject(int index) { return sf.getSubject(index); }
+    public ArrayList<String> getSubjects() { return sf.getSubjects(); }
+    public int getNumberOfSubjects() { return sf.getNumberOfSubjects(); }
     
     public int getMethod() { return mf.getMethod(); }
     

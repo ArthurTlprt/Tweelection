@@ -71,6 +71,8 @@ public class Graph {
         
         frame.add(new XChartPanel(this.charts[0]));
         frame.add(new XChartPanel(this.charts[1]));
-        frame.validate();
+        
+        frame.revalidate();
+        frame.repaint();
     }
 }

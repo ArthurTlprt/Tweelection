@@ -6,6 +6,10 @@
 package gui;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -14,21 +18,34 @@ import javax.swing.JTextField;
  *
  * @author gerald
  */
-public class SubjectsForm extends JPanel {
+public class SubjectsForm extends JPanel implements ActionListener {
 
-    private Input subject1, subject2;
+    private Input newSubject;
+    private JButton addSubject;
+    private SubjectList list;
     
     public SubjectsForm() {
         super();
         
-        setLayout(new GridLayout(2, 1));
-        subject1 = new Input("Subject 1 : ");
-        subject2 = new Input("Subject 2 : ");
-
-        this.add(subject1);
-        this.add(subject2);
+        setLayout(new GridLayout(3, 1));
+        newSubject = new Input("Add subject : ");
+        addSubject = new JButton("Add");
+        list = new SubjectList();
+        
+        addSubject.addActionListener(this);
+        
+        this.add(newSubject);
+        this.add(addSubject);
+        this.add(list);
     }
+
+    public String getSubject(int index) { return list.getSubject(index); }
+    public ArrayList<String> getSubjects() { return list.getSubjects(); }
+    public int getNumberOfSubjects() { return list.getNumberOfSubjects(); }
     
-    public String getSubject1() { return subject1.getText(); }
-    public String getSubject2() { return subject2.getText(); }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        if(newSubject.getText() != null && newSubject.getText().length() != 0)
+            list.addSubject(newSubject.getText());
+    }
 }

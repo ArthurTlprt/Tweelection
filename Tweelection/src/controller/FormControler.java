@@ -5,6 +5,7 @@
  */
 package controller;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,17 +74,16 @@ public class FormControler {
         return true;
     }
     
-    public boolean areSubjectsGood(String sub1, String sub2) {
-        if(sub1.equals(sub2))
-            return false;
-        
-        if(sub1.length() == 0 || sub2.length() == 0)
-            return false;
+    public boolean areSubjectsGood(ArrayList<String> subjects) {
+        for(String sub : subjects) {
+            if(sub.length() == 0 || sub == null)
+                return false;
+        }
         
         return true;
     }
     
-    public boolean allIsGood(String start, String end, String sub1, String sub2) {
-        return isPeriodGood(start, end) && areSubjectsGood(sub1, sub2);
+    public boolean allIsGood(String start, String end, ArrayList<String> subjects) {
+        return isPeriodGood(start, end) && areSubjectsGood(subjects);
     }
 }
