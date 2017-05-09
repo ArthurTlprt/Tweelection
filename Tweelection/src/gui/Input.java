@@ -11,13 +11,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- *
- * @author arthur
+ * Une classe composé d'un label et d'un textfield
+ * Pure practicité
  */
 public class Input extends JPanel {
     
-    private JLabel label;
-    private JTextField text;
+    private final JLabel label;
+    private final JTextField text;
     
     public Input(String label) {
         super();

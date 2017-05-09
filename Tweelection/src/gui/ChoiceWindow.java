@@ -5,23 +5,20 @@
  */
 package gui;
 
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 /**
- *
- * @author gerald
+ * La fenêtre s'affichant au lancement du programme 
  */
 public class ChoiceWindow extends JFrame {
     
-    SubjectsForm sf;
-    MethodForm mf;
-    JButton submit;
+    private final SubjectsForm sf;
+    private final MethodForm mf;
+    private final JButton submit;
     
     public ChoiceWindow() {
         super("Tweelection");

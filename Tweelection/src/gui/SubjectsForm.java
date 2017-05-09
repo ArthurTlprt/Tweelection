@@ -10,19 +10,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 /**
- *
- * @author gerald
+ * La partie de la fenêtre qui recueille les noms des sujets à étudier
  */
 public class SubjectsForm extends JPanel implements ActionListener {
 
-    private Input newSubject;
-    private JButton addSubject;
-    private SubjectList list;
+    private final Input newSubject;
+    private final JButton addSubject;
+    private final SubjectList list;
     
     public SubjectsForm() {
         super();
@@ -43,6 +40,7 @@ public class SubjectsForm extends JPanel implements ActionListener {
     public ArrayList<String> getSubjects() { return list.getSubjects(); }
     public int getNumberOfSubjects() { return list.getNumberOfSubjects(); }
     
+    /* Lorsqu'on appuie sur le bouton pour ajouter un sujet */
     @Override
     public void actionPerformed(ActionEvent ae) {
         if(newSubject.getText() != null && newSubject.getText().length() != 0)

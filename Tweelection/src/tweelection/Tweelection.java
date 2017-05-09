@@ -5,28 +5,11 @@
  */
 package tweelection;
 
-import gui.ChoiceWindow;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import org.knowm.xchart.QuickChart;
-import org.knowm.xchart.SwingWrapper;
-import sentimentanalysis.BagOfWords;
-import sentimentanalysis.Review;
-import tweetExtraction.TweetAboutSubject;
-import org.knowm.xchart.XYChart;
-import tweetAnalyze.tweetAnalyze;
-import tweetExtraction.RealTimeTweet;
+import tweetAnalyze.TweetAnalyze;
 
 /**
- *
- * @author gerald
+ * Calls an instance of TweetAnaluze class
  */
 public class Tweelection {
     /**
@@ -35,9 +18,7 @@ public class Tweelection {
      * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws ParseException, InterruptedException {
-
-        tweetAnalyze ta = new tweetAnalyze();
-        //ChoiceWindow cw = new ChoiceWindow();
+        TweetAnalyze ta = new TweetAnalyze();
     }
 
 }

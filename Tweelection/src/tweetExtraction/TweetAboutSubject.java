@@ -17,13 +17,11 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import twitter4j.TwitterException;
 
 /**
- *
- * @author arthur
+ * Classe utilisée pour récupérer et sauvegarder les tweets sur un sujet
+ * Sur une période
  */
 public class TweetAboutSubject {
 
@@ -44,8 +42,8 @@ public class TweetAboutSubject {
     public TweetAboutSubject(String candidateName, List<String> period) throws ParseException {
         this.candidateName = candidateName;
         this.query = new Query(candidateName);
-        this.dates = new ArrayList<String>();
-        this.texts = new ArrayList<String>();
+        this.dates = new ArrayList<>();
+        this.texts = new ArrayList<>();
         this.setPeriod(period);
 
         cb = new ConfigurationBuilder();
@@ -60,27 +58,28 @@ public class TweetAboutSubject {
         this.extractThisDay();
     }
 
-    public void setPeriod(List<String> period) {
-        this.period = period;
-    }
+    
+    public void setPeriod(List<String> period) { this.period = period; }
 
+    public List<String> getDates() { return dates; }
+    public List<String> getTexts() { return texts; }
+    
+    /* Récupère les tweets sur toute la période réglée */
     public void extractThisDay() throws ParseException {
         period.forEach((day) -> {
-
             if (isNotExtracted(day)) {
                 try {
                     query = new Query(candidateName);
                     query.setCount(100);
                     System.out.println(day);
                     query.setUntil(day);
-                    QueryResult result = null;
+                    QueryResult result;
                     result = twitter.search(query);
 
                     for (int i = 0; i < 2; i++) {
                         query = result.nextQuery();
                         result = twitter.search(query);
                         for (Status status : result.getTweets()) {
-                            //System.out.println(status.getCreatedAt().toString());
                             texts.add(status.getText());
                         }
                     }
@@ -94,6 +93,7 @@ public class TweetAboutSubject {
         });
     }
     
+    /* Vérifie si le jour a déjà été traité lors d'une utilisation antérieure du programme */
     public Boolean isNotExtracted(String day) {
         String path = "tweets_files/" + candidateName + "/" + day;
         File fileToSaveTweets = new File(path);
@@ -103,20 +103,17 @@ public class TweetAboutSubject {
             folderToSaveTweets.mkdir();
         }
 
-        if (fileToSaveTweets.exists()) {
-            return false;
-        }
-        
-        return true;
+        return !fileToSaveTweets.exists();
     }
 
-    
-
+    /* Sauvegarde les tweets trouvés dans un fichier */
+    /* tweet_files/nom_du_sujet/YYYY-MM-DD */
     private void writeInFile(String date) {
         String path = "tweets_files/" + candidateName + "/" + date;
 
         try {
-            PrintWriter writer = new PrintWriter(path, "UTF-8");
+            PrintWriter writer;
+            writer = new PrintWriter(path, "UTF-8");
             System.out.println("New File created");
             texts.forEach((text) -> {
                 writer.println(text);
@@ -128,13 +125,4 @@ public class TweetAboutSubject {
             System.err.println("Unable to write in the file");
         }
     }
-
-    List<String> getDates() {
-        return dates;
-    }
-
-    List<String> getTexts() {
-        return texts;
-    }
-
 }

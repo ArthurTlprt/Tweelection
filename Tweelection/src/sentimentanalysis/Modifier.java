@@ -8,16 +8,15 @@ package sentimentanalysis;
 import java.io.Serializable;
 
 /**
- *
- * @author gerald
+ * Contiendra des n-words
+ * Des mots qui modifient le sens des autres
+ * Exemple : "pas", "très"
  */
 public class Modifier implements Serializable {
     private String word;
     private int multiplier;
     
-    public Modifier() {
-        
-    }
+    public Modifier() {}
     
     public Modifier(String word, int multiplier) {
         this.word = word;

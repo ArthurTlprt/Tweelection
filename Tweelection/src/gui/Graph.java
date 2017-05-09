@@ -6,10 +6,7 @@
 package gui;
 
 import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JFrame;
-import javax.swing.WindowConstants;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
@@ -17,11 +14,10 @@ import org.knowm.xchart.XYSeries.XYSeriesRenderStyle;
 import org.knowm.xchart.style.Styler.LegendPosition;
 
 /**
- *
- * @author Iberos
+ * Affichage du graphique contenant les données
  */
 public class Graph {
-    private XYChart[] charts;
+    private final XYChart[] charts;
     private JFrame frame;
     
     public Graph() {

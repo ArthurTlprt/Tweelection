@@ -13,11 +13,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
-import java.nio.charset.Charset;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -29,12 +27,12 @@ import java.util.logging.Logger;
  * @author gerald
  */
 public class BagOfWords implements Serializable {
-    private ArrayList<String> words;
-    private ArrayList<Integer>[] occurencesByClasses;
-    private ArrayList<Modifier> modifiers;
+    private final ArrayList<String> words;
+    private final ArrayList<Integer>[] occurencesByClasses;
+    private final ArrayList<Modifier> modifiers;
     private String fileName = "bog.tl";
     
-    private int numberOfClasses;
+    private final int numberOfClasses;
     /* Représentation :
        Classe : 0   1   2   3   4   5
         mot 1 : x   x   x   x   x   x
@@ -54,8 +52,6 @@ public class BagOfWords implements Serializable {
     }
     
     public BagOfWords(BagOfWords bog) {
-        //new BagOfWords(this);
-        
         this.numberOfClasses = bog.numberOfClasses;
         this.words  = bog.words;
         this.occurencesByClasses = bog.occurencesByClasses;
@@ -67,9 +63,7 @@ public class BagOfWords implements Serializable {
     }
     
     /* Getters */
-    public String getWordByIndex(int index) {
-        return words.get(index);
-    }
+    public String getWordByIndex(int index) { return words.get(index); }
     
     public int getIndexByWord(String word) {
         if(words.isEmpty())
@@ -86,19 +80,8 @@ public class BagOfWords implements Serializable {
         return result;
     }
     
-    public void addOccurenceByIndex(int wordIndex, int classe) {
-        if(wordIndex >= 0 && wordIndex < words.size()) {
-            
-        }
-    }
-    
-    public void addOccurenceByWord(String word, int classe) {
-        
-    }
     /* Setters */
     public void setFileName(String fileName) { this.fileName = fileName; }
-    
-    /* Miscellaneous */
     
     /* Prints n lines of my BagOfWord */
     public void print(int n) {
@@ -135,9 +118,7 @@ public class BagOfWords implements Serializable {
         word = word.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         word = word.replaceAll("[^a-zA-Z ]", "").toLowerCase();
         word = word.replaceAll(" ", "");
-        
-        //Charset charset = Charset.forName("UTF-8");
-        //word = charset.decode(charset.encode(word)).toString();
+
         return word;
     }
     
@@ -204,7 +185,6 @@ public class BagOfWords implements Serializable {
     }
     
     /* Analyzing a sentence */
-    
     /* Tells if the word is a modifier */
     public int isModifier(String word) {
         word = computeWord(word);
@@ -355,7 +335,7 @@ public class BagOfWords implements Serializable {
         } catch (IOException ex) {
             System.out.println("jsp");
             Logger.getLogger(BagOfWords.class.getName()).log(Level.SEVERE, null, ex);
-        } catch(Exception e) {
+        } catch(NumberFormatException e) {
             System.out.println("Prout");
             System.out.println(e.getMessage());
         }
@@ -370,13 +350,14 @@ public class BagOfWords implements Serializable {
             FileOutputStream file;
             file = new FileOutputStream(fileName);
             
-            ObjectOutputStream obj = new ObjectOutputStream(file);
+            ObjectOutputStream obj;
+            obj = new ObjectOutputStream(file);
             obj.writeObject(this);
             
             obj.close();
             file.close();
             
-        } catch(Exception e) {
+        } catch(IOException e) {
             System.out.println("Serialzation has failed");
         }
     }
@@ -384,15 +365,15 @@ public class BagOfWords implements Serializable {
     public BagOfWords deserialize() {
         BagOfWords bog = null;
         try {
+            FileInputStream fileIn;
+            fileIn = new FileInputStream(fileName);
+            ObjectInputStream in;
+            in = new ObjectInputStream(fileIn);
            
-           //FileInputStream fileIn = new FileInputStream("bog.tl"); 
-           FileInputStream fileIn = new FileInputStream(fileName);
-           ObjectInputStream in = new ObjectInputStream(fileIn);
+            bog = (BagOfWords) in.readObject();
            
-           bog = (BagOfWords) in.readObject();
-           
-           in.close();
-           fileIn.close();
+            in.close();
+            fileIn.close();
            
         }catch(Exception e) {
             System.out.println("Deserialization has failed");

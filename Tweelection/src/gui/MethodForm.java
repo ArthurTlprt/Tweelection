@@ -11,14 +11,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 /**
- *
- * @author gerald
+ * La partie de la fenêtre qui gère la manière d'analyser et la période
  */
 public class MethodForm extends JPanel {
     
-    ButtonGroup group;
-    JRadioButton realTime, periodTime;
-    Input period1, period2;
+    private final ButtonGroup group;
+    private final JRadioButton realTime, periodTime;
+    private final Input period1, period2;
     
     public MethodForm() {
         super();

@@ -14,21 +14,16 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import static java.lang.Thread.sleep;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import sentimentanalysis.BagOfWords;
 import sentimentanalysis.Review;
 import tweetExtraction.RealTimeTweet;
@@ -38,30 +33,30 @@ import tweetExtraction.TweetAboutSubject;
  *
  * @author gerald
  */
-public class tweetAnalyze implements ActionListener {
+public class TweetAnalyze implements ActionListener {
     private boolean realTime;
-    // private int numberOfSubjects = 0;
-    private ArrayList<String> namesOfSubjects;
-    private ArrayList<double[]> rates;
-    private ArrayList<double[]> numberAnalyzed;
+
+    private final ArrayList<String> namesOfSubjects;
+    private final ArrayList<double[]> rates;
+    private final ArrayList<double[]> numberAnalyzed;
     private List<String> period;
-    
-    private int threshold = 60;
-    
-    private Graph g;
     /*
         rates.get(0) contient les notes de namesOfSubject.get(0) pour la periode entière
         Rates.get(0)[0] contient la note de names.get(0) pour period.get(0),
             calculé sur numberAnalyzed.get(0)[0]
     */
     
+    /* La limite de périodes à afficher à la fois */
+    private int threshold = 60;
+    
     private String bogFileName = "bog.tl";
     private BagOfWords bag;
     
-    private ChoiceWindow win;
-    private FormControler control;
+    private final Graph g;
+    private final ChoiceWindow win;
+    private final FormControler control;
     
-    public tweetAnalyze() {
+    public TweetAnalyze() {
         namesOfSubjects = new ArrayList<>();
         rates = new ArrayList<>();
         numberAnalyzed = new ArrayList<>();
@@ -118,6 +113,7 @@ public class tweetAnalyze implements ActionListener {
             launchAnalyzeFiles();
     }
     
+    /* Analyse les données reçues par le RealTimeTweet */
     public void launchAnalyzeRealTime(ArrayList<String> tweets) {
         try {
             bag.setFileName(bogFileName);
@@ -162,6 +158,7 @@ public class tweetAnalyze implements ActionListener {
         }
     }
     
+    /* Analyse les fichiers relatifs aux sujets donnés */
     public void launchAnalyzeFiles() {
         try {
             bag.setFileName(bogFileName);
@@ -211,7 +208,7 @@ public class tweetAnalyze implements ActionListener {
         }
     }
     
-    
+    /* Lance le graphe après l'analyse par fichiers */
     public void launchGraph() {
         
         double[] day = new double[rates.get(0).length];
@@ -224,9 +221,11 @@ public class tweetAnalyze implements ActionListener {
         g.display();
     }
     
-    public void displayGraph() { g.display(); }
-    public void refreshGraph() { g.refresh(); }
+    public void displayGraph() { g.display(); } /* Affiche le graphe déjà configuré */
+    public void refreshGraph() { g.refresh(); } /* Rafraîchit le graphe */
     
+    /* Utilisé dans l'analyse en temps réel */
+    /* Donne le nombre de périodes déjà traitées, et ajoute de la place pour une nouvelle */
     public int getPlaceRealTime(int subjectIndex) {
         if(rates.get(subjectIndex).length == 1 && rates.get(subjectIndex)[0] == 0.0) {
             return 0;
@@ -266,11 +265,13 @@ public class tweetAnalyze implements ActionListener {
         
     }
     
+    /* Sauvegarde le sac de mots */
     public void save() {
         bag.serialize();
         System.out.println("Done !");
     }
 
+    /* Appelé lorsqu'on appuie sur le bouton pour lancer l'analyse */
     @Override
     public void actionPerformed(ActionEvent ae) {
         if(win.getMethod() == -1)
@@ -342,13 +343,13 @@ public class tweetAnalyze implements ActionListener {
                 
                 save();
             } catch (ParseException ex) {
-                Logger.getLogger(tweetAnalyze.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(TweetAnalyze.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
     
     private void setPeriod(String str_startDate, String str_endDate) throws ParseException {
-        period = new ArrayList<String>();
+        period = new ArrayList<>();
 
         DateFormat formatter;
 
