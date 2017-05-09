@@ -1,0 +1,16 @@
+@startuml
+class controller.FormControler
+class gui.ChoiceWindow
+class gui.Graph
+class gui.Input
+class gui.MethodForm
+class gui.SubjectList
+class gui.SubjectsForm
+class sentimentanalysis.BagOfWords
+class sentimentanalysis.Modifier
+class sentimentanalysis.Review
+class tweelection.Tweelection
+class tweetAnalyze.TweetAnalyze
+class tweetExtraction.RealTimeTweet
+class tweetExtraction.TweetAboutSubject
+@enduml
