@@ -37,6 +37,26 @@ public class Graph {
         this.charts[1].getStyler().setMarkerSize(0);
     }
     
+    public Graph(boolean realTime) {
+        this.charts = new XYChart[2];
+        
+        // Rate chart
+        if(realTime)
+            this.charts[0] = new XYChartBuilder().width(800).height(300).xAxisTitle("10 secs").title("Note").build();
+        else
+            this.charts[0] = new XYChartBuilder().width(800).height(300).xAxisTitle("Days").title("Note").build();
+        
+        this.charts[0].getStyler().setLegendPosition(LegendPosition.InsideNE);
+        this.charts[0].getStyler().setMarkerSize(0);
+        this.charts[0].getStyler().setDefaultSeriesRenderStyle(XYSeriesRenderStyle.Area);
+        
+        // Tweet count chart
+        this.charts[1] = new XYChartBuilder().width(800).height(300).title("Nombre de tweets").build();
+        
+        this.charts[1].getStyler().setLegendPosition(LegendPosition.InsideNE);
+        this.charts[1].getStyler().setMarkerSize(0);
+    }
+    
     public void addData(String name, double[] day, double[] rates, double[] number) {
         this.charts[0].addSeries(name, day, rates);
         this.charts[1].addSeries(name, day, number);

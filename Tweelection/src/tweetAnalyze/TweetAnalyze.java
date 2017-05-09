@@ -52,7 +52,7 @@ public class TweetAnalyze implements ActionListener {
     private String bogFileName = "bog.tl";
     private BagOfWords bag;
     
-    private final Graph g;
+    private Graph g;
     private final ChoiceWindow win;
     private final FormControler control;
     
@@ -61,7 +61,6 @@ public class TweetAnalyze implements ActionListener {
         rates = new ArrayList<>();
         numberAnalyzed = new ArrayList<>();
         //period = new List<>();
-        g = new Graph();
         
         bag = new BagOfWords();
         
@@ -288,6 +287,7 @@ public class TweetAnalyze implements ActionListener {
         if(win.getMethod() == 0) {
             if(!control.areSubjectsGood(namesOfSubjects))
                 return;
+            g = new Graph(true);
             setRealTime(true);
             win.setVisible(false);
             win.dispose();
@@ -327,6 +327,7 @@ public class TweetAnalyze implements ActionListener {
             if(!control.allIsGood(start, end, namesOfSubjects))
                 return;
             try {
+                g = new Graph(false);
                 win.setVisible(false);
                 win.dispose();
                 setPeriod(start, end);
