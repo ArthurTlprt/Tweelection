@@ -304,13 +304,9 @@ public class tweetAnalyze implements ActionListener {
             t = new Thread() {
                 @Override
                 public void run() {
-                    int a = 0;
-
                     while(true) {
                         Calendar x2 = Calendar.getInstance();
                         while (x2.getTimeInMillis() - mySession.getMomentBegin().getTimeInMillis() > mySession.getInterval()) {
-                            a++;
-                            System.out.println(a);
                             mySession.setMomentBegin(x2);
                             mySession.extractTweets();
                             for (int i = 0; i < mySession.getLength(); i++) {

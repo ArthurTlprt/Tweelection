@@ -78,7 +78,7 @@ public class RealTimeTweet {
     public String[] getCandidates() { return candidate; }
     public ArrayList<String>[] getTexts() { return texts; }
     public ArrayList<String> getTexts(int index) { return texts[index]; }
-    public int getLength() { return texts.length; }
+    public int getLength() { return candidate.length; }
     public long getInterval() { return interval; }
     
     public void extractTweets() {

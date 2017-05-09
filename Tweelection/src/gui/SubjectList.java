@@ -5,6 +5,7 @@
  */
 package gui;
 
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,12 +26,13 @@ public class SubjectList extends JPanel {
     
     public void addSubject(String newSubject) { 
         list.add(newSubject);
-        textList.add(new JLabel(newSubject));
+        textList.add(new JLabel("- " + newSubject));
         refresh();
     }
     
     public void refresh() {
         this.removeAll();
+        this.setLayout(new GridLayout(list.size(), 1));
         for(JLabel sub : textList) {
             this.add(sub);
         }
